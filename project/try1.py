@@ -1,5 +1,5 @@
 import flet as ft
-from client4 import Client
+from client import Client
 
 class Workout_info:
     def __init__(self, client: Client) -> None:

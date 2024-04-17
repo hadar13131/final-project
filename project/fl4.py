@@ -1,7 +1,7 @@
 import time
 
 
-from j import Set, Exercise, Workout
+from models import Set, Exercise, Workout
 import json
 
 import calendar
@@ -10,7 +10,7 @@ from datetime import datetime
 import flet as ft
 import calendar
 from datetime import datetime
-from client4 import Client
+from client import Client
 
 class AddWorkout: #add workout
     def __init__(self, client: Client) -> None:

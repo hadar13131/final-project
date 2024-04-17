@@ -1,6 +1,6 @@
 import flet as ft
-from client4 import Client
-from j import Set, Exercise
+from client import Client
+from models import Set, Exercise
 import json
 
 import calendar

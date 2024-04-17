@@ -5,7 +5,7 @@ import hashlib
 from fastapi import FastAPI, HTTPException, Depends
 from sqlalchemy import Table, Column, create_engine, MetaData, String, Boolean, INTEGER, JSON, update, DateTime
 from sqlalchemy.orm.session import sessionmaker
-from j import Set, Exercise
+from models import Set, Exercise
 from datetime import datetime
 
 app = FastAPI(docs_url="/")

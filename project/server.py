@@ -2,11 +2,11 @@
 
 import uvicorn
 
-from api4 import app
+from api import app
 
 
 def main() -> None:
-    SERVER_IP = "127.0.0.1"
+    SERVER_IP = "10.14.52.17"
     SERVER_PORT = 1234
     uvicorn.run(app, host=SERVER_IP, port=SERVER_PORT)
 
