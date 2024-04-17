@@ -376,8 +376,8 @@ def showimprovement(userid: str, exercise_name: str, s_date: datetime, e_date: d
     find = session.query(workout_table).filter(workout_table.c.userid == userid).all() #filter by userid, get lst of workouts
 
     for f in find: # going through the workouts
-        if f[2] > s_date and f[2] < e_date: #check if its in the right date
-            l = f[3] #get the list of exercises
+        if f[3] > s_date and f[3] < e_date: #check if its in the right date
+            l = f[4] #get the list of exercises
             for l2 in l: #going through the exercises
                 l3 = json.loads(l2) #from string to dict
                 if l3["name"] == exercise_name: #check if there is the exercise the user want
@@ -391,7 +391,7 @@ def showimprovement(userid: str, exercise_name: str, s_date: datetime, e_date: d
     n = 0
 
     for e in exec_lst: #going through the full workout
-        e2 = e[3] #take the list of exercises
+        e2 = e[4] #take the list of exercises
         for j in e2: #going through the exercises list
             print(j)
             e3 = json.loads(j) #change the str to dict

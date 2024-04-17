@@ -93,7 +93,7 @@ class MenuApp:
         self.page.appbar = ft.AppBar(
             leading=ft.Icon(ft.icons.PALETTE),
             leading_width=40,
-            title=ft.Text("START THE ACTION"),
+                title=ft.Text("START TO MOVE"),
             center_title=True,
             bgcolor=ft.colors.SURFACE_VARIANT,
             actions=[
