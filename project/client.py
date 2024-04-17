@@ -2,10 +2,10 @@ import json
 
 import requests
 import sqlite3
-from j import Set, Exercise, Workout
+from models import Set, Exercise, Workout
 from datetime import datetime
 
-import api4
+import api
 
 class Client:
     def __init__(self):

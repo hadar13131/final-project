@@ -1,4 +1,4 @@
-from j import Set, Exercise
+from models import Set, Exercise
 import json
 
 import calendar
@@ -7,7 +7,7 @@ from datetime import datetime
 import flet as ft
 import calendar
 from datetime import datetime
-from client4 import Client
+from client import Client
 
 import menu_page
 

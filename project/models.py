@@ -1,4 +1,4 @@
-from typing import Self, Dict, List
+
 import json
 from datetime import datetime
 
@@ -13,7 +13,7 @@ class Set:
     distance_KM: float = 0.0
 
     @classmethod
-    def load(cls, data: dict[str, int | int | float | float]) -> Self:
+    def load(cls, data: dict[str, int | int | float | float]) -> 'Set':
         return cls(repetitions=data["repetitions"], time=data["time"], weight=data["weight"],
                    distance_KM=data["distance_KM"])
 
@@ -43,7 +43,7 @@ class Workout:
     exercises: list[Exercise]
 
     @classmethod
-    def load(cls, data: dict[str, str | str | list[Exercise]]) -> Self:
+    def load(cls, data: dict[str, str | str | list[Exercise]]) -> 'Workout':
         return cls(date=data["date"], workout_name=data["workout_name"], exercises=[Exercise.load(e) for e in data["exercises"]])
 
     def dump(self) -> dict[str, str | list[dict[str, str | list[dict[str, int]]]]]:
