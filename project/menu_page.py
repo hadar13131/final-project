@@ -11,6 +11,12 @@ from fl4 import App5
 from fl4 import HomePage
 from fl4 import CalendarApp
 from fl4 import Profile_Page
+from fl4 import ShowImprove1
+import try2
+from fl import show_improvement
+from fl import add_workout
+from fl import profil_page
+
 
 
 class MenuApp:
@@ -49,7 +55,7 @@ class MenuApp:
         self.page = page
         if selected_index == 0: #profile page
             self.page.clean()
-            app_instance = Profile_Page(client=self.client)
+            app_instance = profil_page.Profile_Page(client=self.client)
             app_instance.main(self.page)
             # self.page.add(ft.SafeArea(self.profile_page()))
             # app_instance = App3()
@@ -60,12 +66,12 @@ class MenuApp:
 
         elif selected_index == 1: #calendar
             self.page.clean()
-            app_instance = CalendarApp(client=self.client)
+            app_instance = add_workout.CalendarApp(client=self.client)
             app_instance.main(self.page, self.client)
 
         elif selected_index == 2: #improvment
             self.page.clean()
-            app_instance = App5(client=self.client)
+            app_instance = show_improvement.ShowImproveGraps(client=self.client)
             app_instance.main(self.page)
             # self.page.add(ft.SafeArea(self.show_improvement_page()))
 
@@ -93,12 +99,13 @@ class MenuApp:
         self.page.appbar = ft.AppBar(
             leading=ft.Icon(ft.icons.PALETTE),
             leading_width=40,
-                title=ft.Text("START TO MOVE"),
+            title=ft.Text("START TO MOVE"),
             center_title=True,
             bgcolor=ft.colors.SURFACE_VARIANT,
             actions=[
                 ft.IconButton(ft.icons.HOME, on_click=self.handle_home_click),
-                ft.IconButton(ft.icons.FILTER_3),
+                ft.Text("HELLO " + self.client.first_name),
+                ft.Text(datetime.now().strftime("%x")),
                 ft.PopupMenuButton(
                     items=[
                         ft.PopupMenuItem(text="Item 1"),

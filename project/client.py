@@ -26,8 +26,26 @@ class Client:
 
         self.username = name
         self.password = password
-        self.user_workout_lst = api4.lst_of_workouts_by_username(self.username)
-        # self.user_exer_lst = api3.lst_of_exercise_names(self.username)
+        self.first_name = api.find_first_name(self.username)
+        self.user_workout_lst = api.lst_of_workouts_by_username(self.username)
+        self.user_exer_lst = api.lst_of_exercise_names(self.username)
+
+        return response.json()
+
+    def authenticate2(self, email, name, password):
+        credentials = dict(email=email, name=name, password=password)
+
+        response = requests.get(
+            f"{self.server_address}/authenticate2",
+            params=credentials
+        )
+
+        if response.json()["response"] == "user authenticated":
+            self.username = name
+            self.password = password
+            self.first_name = api.find_first_name(self.username)
+            self.user_workout_lst = api.lst_of_workouts_by_username(self.username)
+            self.user_exer_lst = api.lst_of_exercise_names(self.username)
 
         return response.json()
 
@@ -76,9 +94,7 @@ class Client:
             params=credentials
         )
 
-        # for i in exerciselist:
-        #     j = json.loads(i)
-        #     self.user_exer_lst.append(j["name"])
+        self.user_workout_lst = api.lst_of_workouts_by_username(self.username)
 
         return response.json()
 
@@ -93,6 +109,8 @@ class Client:
         )
         exercise2 = json.loads(exercise)
         self.user_exer_lst.append(exercise2["name"])
+
+        self.user_workout_lst = api.lst_of_workouts_by_username(self.username)
 
         return response.json()
 
@@ -113,6 +131,8 @@ class Client:
             f"{self.server_address}/addsettoexercise",
             params=credentials
         )
+
+        self.user_workout_lst = api.lst_of_workouts_by_username(self.username)
         return response.json()
 
     def showimprovement(self, userid: str, exercise_name: str, s_date: datetime, e_date: datetime):
@@ -120,6 +140,32 @@ class Client:
 
         response = requests.get(
             f"{self.server_address}/showimprovement",
+            params=credentials
+        )
+        return response.json()
+    def showimprovement2(self, userid: str, exercise_name: str, s_date: datetime, e_date: datetime):
+        credentials = dict(userid=userid, exercise_name=exercise_name, s_date=s_date, e_date=e_date)
+
+        response = requests.get(
+            f"{self.server_address}/showimprovement2",
+            params=credentials
+        )
+        return response.json()
+
+    def improve_with_params(self, userid: str, exercise_name: str, s_date: datetime, e_date: datetime):
+        credentials = dict(userid=userid, exercise_name=exercise_name, s_date=s_date, e_date=e_date)
+
+        response = requests.get(
+            f"{self.server_address}/improve_with_params",
+            params=credentials
+        )
+        return response.json()
+
+    def improve_with_params2(self, userid: str, exercise_name: str, s_date: datetime, e_date: datetime):
+        credentials = dict(userid=userid, exercise_name=exercise_name, s_date=s_date, e_date=e_date)
+
+        response = requests.get(
+            f"{self.server_address}/improve_with_params2",
             params=credentials
         )
         return response.json()

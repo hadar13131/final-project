@@ -9,6 +9,7 @@ import calendar
 from datetime import datetime
 from client import Client
 import connect_page
+from fl.login_signup import LoginPage
 
 
 class First_page:
@@ -46,7 +47,7 @@ class First_page:
     def go_to_login(self, e: ft.ControlEvent) -> None:
         # Function to navigate to App3 page
         self.page.clean()
-        app_instance = connect_page.App()
+        app_instance = LoginPage()
         app_instance.main(self.page)
 
     def go_to_signup(self, e: ft.ControlEvent) -> None:

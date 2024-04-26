@@ -1,6 +1,5 @@
 import time
 
-
 from models import Set, Exercise, Workout
 import json
 
@@ -12,7 +11,8 @@ import calendar
 from datetime import datetime
 from client import Client
 
-class AddWorkout: #add workout
+
+class AddWorkout:  # add workout
     def __init__(self, client: Client) -> None:
         self.page = None
         self.client = client
@@ -27,7 +27,8 @@ class AddWorkout: #add workout
         self.month = ft.TextField(label="month", autofocus=True, border_color='#8532B8')
         self.year = ft.TextField(label="year", autofocus=True, border_color='#8532B8')
 
-        self.button1 = ft.ElevatedButton(text="add exercise", on_click=self.go_to_add_exercise, bgcolor='#8532B8', color='white')
+        self.button1 = ft.ElevatedButton(text="add exercise", on_click=self.go_to_add_exercise, bgcolor='#8532B8',
+                                         color='white')
         self.massage2 = ft.TextField(read_only=True, border="none", color='#A8468C')
 
         # self.exerciselist = ft.Text("add exercise:")
@@ -73,7 +74,7 @@ class AddWorkout: #add workout
         )
 
     def go_to_add_exercise(self, e: ft.ControlEvent) -> None:
-        #save part of the informarion of the workout
+        # save part of the informarion of the workout
         userid1 = self.client.username
 
         workout_name = self.workout_name.value
@@ -131,7 +132,8 @@ class Add_Exercise:
         self.weightS1 = ft.TextField(label="weight", autofocus=True, border_color='#8532B8')
         self.distance_KMS1 = ft.TextField(label="distance_KM", autofocus=True, border_color='#8532B8')
 
-        self.button4 = ft.ElevatedButton(text="add the exercise to workout", on_click=self.click, bgcolor='#8532B8', color='white')
+        self.button4 = ft.ElevatedButton(text="add the exercise to workout", on_click=self.click, bgcolor='#8532B8',
+                                         color='white')
         self.addexerciseM = ft.TextField(read_only=True, border="none", color='#A8468C')
 
         self.addexercise = ft.Column(
@@ -169,7 +171,8 @@ class Add_Exercise:
         exerlst = Exercise(name=name1, power=power1, sets=[sets2])
         exerlst = json.dumps(exerlst.dump())
         print("ok2")
-        response2 = self.client.addexercisetoworkout(userid=userid1, date=date, workout_name=workout_name, exercise=exerlst)
+        response2 = self.client.addexercisetoworkout(userid=userid1, date=date, workout_name=workout_name,
+                                                     exercise=exerlst)
         print("ok3")
         self.addexerciseM.value = response2["response"]
         print("worked")
@@ -224,7 +227,6 @@ class Add_Set:
 
         self.addsetM = ft.TextField(read_only=True, border="none", color='#A8468C')
 
-
         self.addset = ft.Column(
             [
                 self.text2,
@@ -236,7 +238,6 @@ class Add_Set:
                 self.addsetM
             ]
         )
-
 
     def click(self, e: ft.ControlEvent):
         userid = self.client.username
@@ -273,11 +274,14 @@ class Add_Set:
 
         self.page.update()
 
+
 def main() -> None:
     ft.app(target=Profile_Page.main)
 
+
 if __name__ == "__main__":
     main()
+
 
 class CalendarApp:
     cal = calendar.Calendar()
@@ -347,13 +351,13 @@ class CalendarApp:
 
     class DateBox(ft.Container):
         def __init__(
-            self,
-            day: int,
-            event: bool = False,
-            date: str = None,
-            date_instnace: ft.Column = None,
-            task_instnace: ft.Column = None,
-            opacity: float | int = None,
+                self,
+                day: int,
+                event: bool = False,
+                date: str = None,
+                date_instnace: ft.Column = None,
+                task_instnace: ft.Column = None,
+                opacity: float | int = None,
         ) -> None:
             super(CalendarApp.DateBox, self).__init__(
                 **CalendarApp.date_box_style,
@@ -371,7 +375,6 @@ class CalendarApp:
                 self.content = ft.Text(self.day, text_align="center")
             else:
                 self.content = ft.Text(f"{self.day} \n**", text_align="center")
-
 
         def selected(self, e: ft.TapEvent):
             if self.date_instnace:
@@ -513,8 +516,6 @@ class CalendarApp:
                     #                 # row.controls.clear()
                     #                 row.controls.append(CalendarApp.DateBox("**"))
 
-
-
                 self.controls.append(row)
 
         def update_date_grid(self, e: ft.TapEvent, delta: int):
@@ -529,7 +530,6 @@ class CalendarApp:
             )
 
             self.update()
-
 
         def update_year_and_month(self, year: int, month: int):
             self.year = year
@@ -640,6 +640,7 @@ class CalendarApp:
 
         page.update()
 
+
 def main() -> None:
     ft.app(target=CalendarApp.main)
 
@@ -648,8 +649,7 @@ if __name__ == "__main__":
     main()
 
 
-
-class App: #login, signup, delete user
+class App:  # login, signup, delete user
 
     def __init__(self, client: Client) -> None:
         self.page = None
@@ -657,11 +657,13 @@ class App: #login, signup, delete user
 
         # Create a button to navigate to App3 page
         self.button_to_app300 = ft.ElevatedButton(text="Go to App3", on_click=self.go_to_app3, bgcolor='#8532B8',
-                                                color='white')
+                                                  color='white')
 
-        self.text1 = ft.Text("login", size=55, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True, font_family="Elephant")
+        self.text1 = ft.Text("login", size=55, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True,
+                             font_family="Elephant")
         self.username1 = ft.TextField(label="User Name", autofocus=True, border_color='#8532B8')
-        self.password1 = ft.TextField(label="Password", autofocus=True, password=True, can_reveal_password=True, border_color='#8532B8')
+        self.password1 = ft.TextField(label="Password", autofocus=True, password=True, can_reveal_password=True,
+                                      border_color='#8532B8')
         self.button1 = ft.ElevatedButton(text="Login", on_click=self.click1, bgcolor='#8532B8', color='white')
         self.massageL1 = ft.TextField(read_only=True, border="none", color='#A8468C')
 
@@ -678,9 +680,11 @@ class App: #login, signup, delete user
             # height=1000
         )
 
-        self.text2 = ft.Text("sign up", size=55, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True, font_family="Elephant")
+        self.text2 = ft.Text("sign up", size=55, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True,
+                             font_family="Elephant")
         self.username2 = ft.TextField(label="User Name", autofocus=True, border_color='#8532B8')
-        self.password2 = ft.TextField(label="Password", autofocus=True, password=True, can_reveal_password=True, border_color='#8532B8')
+        self.password2 = ft.TextField(label="Password", autofocus=True, password=True, can_reveal_password=True,
+                                      border_color='#8532B8')
         self.button2 = ft.ElevatedButton(text="Sign Up", on_click=self.click2, bgcolor='#8532B8', color='white')
         self.massageS2 = ft.TextField(read_only=True, border="none", color='#A8468C')
 
@@ -733,14 +737,12 @@ class App: #login, signup, delete user
         app3_instance = AddWorkout(self.client)
         app3_instance.main(self.page)
 
-
-
     # to authenticate
     def click1(self, e: ft.ControlEvent) -> None:
         username = self.username1.value
         password = self.password1.value
 
-        #error massages
+        # error massages
         self.username1.error_text = ""
         self.password1.error_text = ""
 
@@ -822,12 +824,12 @@ class App: #login, signup, delete user
             self.username3.error_text = "Please enter your username"
             self.page.update()
 
-
     def main(self, page: ft.Page) -> None:
         self.page = page
         self.page.scroll = ft.ScrollMode.ALWAYS
 
-        row_container = ft.Row([self.main_panel_login, self.main_panel_signup, self.main_panel_delete], auto_scroll=True)
+        row_container = ft.Row([self.main_panel_login, self.main_panel_signup, self.main_panel_delete],
+                               auto_scroll=True)
         row_container.main_alignment = ft.MainAxisAlignment.CENTER
 
         row_container.width = 920
@@ -860,15 +862,17 @@ class App4:
         self.page = None
         self.client = client
 
-        self.title1 = ft.Text("add set to exercise", size=20, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True,
-                             font_family="Elephant")
-        self.title2 = ft.Text("add exercise to workout", size=20, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True,
-                             font_family="Elephant")
+        self.title1 = ft.Text("add set to exercise", size=20, color='#8532B8', weight=ft.FontWeight.W_500,
+                              selectable=True,
+                              font_family="Elephant")
+        self.title2 = ft.Text("add exercise to workout", size=20, color='#8532B8', weight=ft.FontWeight.W_500,
+                              selectable=True,
+                              font_family="Elephant")
         # self.title3 = ft.Text("delete set from exercise", size=20, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True,
         #                      font_family="Elephant")
-        self.title4 = ft.Text("delete exercise from workout", size=20, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True,
-                             font_family="Elephant")
-
+        self.title4 = ft.Text("delete exercise from workout", size=20, color='#8532B8', weight=ft.FontWeight.W_500,
+                              selectable=True,
+                              font_family="Elephant")
 
         self.userid1 = ft.TextField(label="userid", autofocus=True, border_color='#8532B8')
         self.date = ft.TextField(label="date", autofocus=True, border_color='#8532B8')
@@ -886,15 +890,17 @@ class App4:
 
         # self.button1 = ft.ElevatedButton(text="delete the set", on_click=self.click1_addexercise(), bgcolor='#8532B8', color='white')
         # self.button3 = ft.ElevatedButton(text="add set to exercise", on_click=self.click3_add_set_to_exercise, bgcolor='#8532B8', color='white')
-        self.button4 = ft.ElevatedButton(text="add exercise to workout", on_click=self.click4_add_exercise_to_workout, bgcolor='#8532B8', color='white')
+        self.button4 = ft.ElevatedButton(text="add exercise to workout", on_click=self.click4_add_exercise_to_workout,
+                                         bgcolor='#8532B8', color='white')
         # self.button5 = ft.ElevatedButton(text="delete set from exercise", on_click=self.click5_delete_set_from_exercise, bgcolor='#8532B8', color='white')
-        self.button6 = ft.ElevatedButton(text="delete exercise from workout", on_click=self.click6_delete_exercise_from_workout, bgcolor='#8532B8', color='white')
+        self.button6 = ft.ElevatedButton(text="delete exercise from workout",
+                                         on_click=self.click6_delete_exercise_from_workout, bgcolor='#8532B8',
+                                         color='white')
 
         # self.addsetM = ft.TextField(read_only=True, border="none", color='#A8468C')
         # self.deletesetM = ft.TextField(read_only=True, border="none", color='#A8468C')
         self.addexerciseM = ft.TextField(read_only=True, border="none", color='#A8468C')
         self.deleteexerciseM = ft.TextField(read_only=True, border="none", color='#A8468C')
-
 
         self.addset = ft.Column(
             [
@@ -1024,7 +1030,6 @@ class App4:
     #     # self.massage3.value = response.get("response", "Default Value")
     #     self.page.update()
 
-
     # to delete a exercise to workout by name
     # need to change to add by the currnet name and current workout id
     def click6_delete_exercise_from_workout(self, e: ft.ControlEvent):
@@ -1052,7 +1057,6 @@ class App4:
         print("worked")
         self.page.update()
 
-
     def main(self, page: ft.Page) -> None:
         self.page = page
         self.page.scroll = ft.ScrollMode.ALWAYS
@@ -1063,7 +1067,6 @@ class App4:
         self.page.update()
 
 
-
 def main() -> None:
     ft.app(target=App4().main)
 
@@ -1072,9 +1075,7 @@ if __name__ == "__main__":
     main()
 
 
-
-
-class App5:
+class App5:  # show improvement
     def __init__(self, client: Client) -> None:
         self.page = None
         self.client = client
@@ -1119,7 +1120,7 @@ class App5:
                 self.text1,
                 # self.username1,
                 self.exercise_name,
-                #self.dd,
+                # self.dd,
                 self.s_date,
                 self.day1,
                 self.month1,
@@ -1161,7 +1162,6 @@ class App5:
         self.avgweight.value = response["weight"]
         self.avgdistance_KM.value = response["distance_KM"]
         self.page.update()
-
 
     def main(self, page: ft.Page) -> None:
         self.page = page
@@ -1230,7 +1230,6 @@ if __name__ == "__main__":
     main()
 
 
-
 class Profile_Page:
     def __init__(self, client: Client) -> None:
         self.page = None
@@ -1276,13 +1275,214 @@ if __name__ == "__main__":
     main()
 
 
+class State:
+    toggle = True
+
+
+s = State()
+
+class ShowImprove1:
+    def __init__(self, client: Client) -> None:
+        self.page = None
+        self.client = client
+
+        self.exercise_name = ft.TextField(label="exercise name", autofocus=True, border_color='#8532B8')
+        self.s_date = ft.Text("start date-", size=20, color='#8532B8')
+        self.day1 = ft.TextField(label="day", autofocus=True, border_color='#8532B8')
+        self.month1 = ft.TextField(label="month", autofocus=True, border_color='#8532B8')
+        self.year1 = ft.TextField(label="year", autofocus=True, border_color='#8532B8')
+
+        self.e_date = ft.Text("end date-", size=20, color='#8532B8')
+        self.day2 = ft.TextField(label="day", autofocus=True, border_color='#8532B8')
+        self.month2 = ft.TextField(label="month", autofocus=True, border_color='#8532B8')
+        self.year2 = ft.TextField(label="year", autofocus=True, border_color='#8532B8')
+        self.button1 = ft.ElevatedButton(text="send", on_click=self.click1, bgcolor='#8532B8', color='white')
+
+        self.show_improvement_panel = ft.Column(
+            [
+                self.exercise_name,
+                self.s_date,
+                self.day1,
+                self.month1,
+                self.year1,
+                self.e_date,
+                self.day2,
+                self.month2,
+                self.year2,
+                self.button1
+            ]
+        )
+
+    def click1(self, e: ft.ControlEvent) -> None:
+        username = self.client.username
+        self.workout_lst = self.client.user_workout_lst
+
+        exercise_name = self.exercise_name.value
+
+        day1 = int(self.day1.value)
+        month1 = int(self.month1.value)
+        year1 = int(self.year1.value)
+        s_date = datetime(year1, month1, day1)
+
+        day2 = int(self.day2.value)
+        month2 = int(self.month2.value)
+        year2 = int(self.year2.value)
+        e_date = datetime(year2, month2, day2)
+
+        response = self.client.improve_with_params(username, exercise_name, s_date, e_date)
+        dates_l = response["dates"]
+        count_sets_l = response["count_sets"]
+        avgrepete_l = response["repetitions_avg"]
+        avgtime_l = response["time_avg"]
+        avgweight_l = response["weight_avg"]
+        avgdistance_KM_l = response["distance_KM_avg"]
+
+        self.page.clean()
+        app_instance = Graphs1(client=self.client, exercise_name=exercise_name, s_date=s_date, e_date=e_date,
+                               lst=avgrepete_l, date_lst=dates_l)
+        app_instance.main(self.page)
+        app_instance = Graphs1(client=self.client, exercise_name=exercise_name, s_date=s_date, e_date=e_date,
+                               lst=avgrepete_l, date_lst=dates_l)
+        app_instance.main(self.page)
+
+    # def click2(self, e: ft.ControlEvent) -> None:
+        # self.page.clean()
+        # self.page.add(ft.Row([self.chart]))
+        # self.page.update()
+
+    def show(self, exercise_name, s_date, e_date, lst, date_lst):
+        # new_lst = []
+        # n = 0
+        # for i in lst:
+        #     new_lst.append(ft.LineChartDataPoint(i, date_lst[n]))
+        #     n = n + 1
+        #
+        # data_1 = [
+        #     ft.LineChartData(
+        #         data_points=new_lst,
+        #         stroke_width=5,
+        #         color=ft.colors.CYAN,
+        #         curved=True,
+        #         stroke_cap_round=True,
+        #     )
+        # ]
+
+        self.page.add(self.button, self.chart)
+        self.page.update()
+
+
+    def main(self, page: ft.Page):
+        self.page = page
+        self.page.scroll = ft.ScrollMode.ALWAYS
+
+        row_container = ft.Row([self.show_improvement_panel])
+        row_container.main_alignment = ft.MainAxisAlignment.CENTER
+
+        row_container.width = 920
+        self.page.add(row_container)
+
+        self.page.horizontal_alignment = 'CENTER'
+        self.page.vertical_alignment = 'CENTER'
+
+        self.page.update()
+
+
+def main() -> None:
+    ft.app(target=ShowImprove1().main)
+
+
+if __name__ == "__main__":
+    main()
+
+
+class Graphs1:
+    def __init__(self, client: Client, exercise_name, s_date, e_date, lst, date_lst) -> None:
+        self.page = None
+        self.client = client
+        self.exercise_name = exercise_name
+        self.s_date = s_date
+        self.e_date = e_date
+        self.lst = lst
+        self.date_lst = date_lst
+
+
+        new_lst = []
+        left_axis1 = []
+        bottom_axis1 = []
+
+        n = 0
+        for i in lst:
+            new_lst.append(ft.LineChartDataPoint(date_lst[n], i))
+            left_axis1.append(ft.ChartAxisLabel(
+                        value=date_lst[n],
+                        label=ft.Text(i, size=14, weight=ft.FontWeight.BOLD),
+                    ))
+
+            bottom_axis1.append(ft.ChartAxisLabel(
+                        value=date_lst[n],
+                        label=ft.Container(
+                            ft.Text(
+                                i,
+                                size=16,
+                                weight=ft.FontWeight.BOLD,
+                                color=ft.colors.with_opacity(0.5, ft.colors.ON_SURFACE),
+                            ),
+                            margin=ft.margin.only(top=10),
+                        ),
+                    ))
+
+            n = n + 1
+
+        self.data_1 = [
+            ft.LineChartData(
+                data_points=new_lst,
+                stroke_width=5,
+                color=ft.colors.CYAN,
+                curved=True,
+                stroke_cap_round=True,
+            )
+        ]
+
+        self.chart = ft.LineChart(
+            data_series=self.data_1,
+            border=ft.border.all(3, ft.colors.with_opacity(0.2, ft.colors.ON_SURFACE)),
+            horizontal_grid_lines=ft.ChartGridLines(
+                interval=1, color=ft.colors.with_opacity(0.2, ft.colors.ON_SURFACE), width=1
+            ),
+            vertical_grid_lines=ft.ChartGridLines(
+                interval=1, color=ft.colors.with_opacity(0.2, ft.colors.ON_SURFACE), width=1
+            ),
+            left_axis=ft.ChartAxis(
+                labels=left_axis1,
+                labels_size=40,
+            ),
+            bottom_axis=ft.ChartAxis(
+                labels=bottom_axis1,
+                labels_size=32,
+            ),
+            tooltip_bgcolor=ft.colors.with_opacity(0.8, ft.colors.BLUE_GREY),
+            # min_y=0,
+            # max_y=6,
+            # min_x=0,
+            # max_x=11,
+            # # animate=5000,
+            # expand=True,
+        )
 
 
 
+    def main(self, page: ft.Page) -> None:
+        self.page = page
+        # self.page.scroll = ft.ScrollMode.ALWAYS
+
+        self.page.add(ft.Row([self.chart]))
+
+def main() -> None:
+    ft.app(target=Graphs1().main)
 
 
-
-
+if __name__ == "__main__":
+    main()
 
 
 
