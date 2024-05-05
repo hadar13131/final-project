@@ -196,21 +196,6 @@ def delete(name: str, password: str) -> dict[str, str]:
 
     return {"response": "user data not found"}
 
-    # if (name, password_hash) in users:
-    #     session.execute(
-    #         user_table.delete().where(
-    #             user_table.c.name == name and
-    #             user_table.c.password == password_hash
-    #         )
-    #     )
-    #
-    #     session.commit()
-    #
-    #     return {"response": "delete success"}
-    #
-    # return {"response": "user data not found"}
-
-
 # end delete
 
 
@@ -250,6 +235,21 @@ def authenticate2(email: str, name: str, password: str) -> dict[str, str]:
     return {"response": "user data not found"}
 
 # end authenticate2
+
+@app.get("/check_email")
+def check_email(email: str) -> dict[str, str]:
+    session = Session()
+
+    users = session.execute(user_table.select())
+
+    for user in users:
+        # Check if the username and password match
+        if user.email == email:
+            return {"response": "the email not valid"}
+
+    return {"response": "the email is valid"}
+
+# end check_email
 
 
 @app.get("/addworkout")
@@ -348,8 +348,8 @@ def addsettoexercise(userid: str, date: str, workout_name: str, exercise, sets):
     session = Session()
 
     find = session.query(workout_table).filter(workout_table.c.userid == userid).all()
-    exec = find[0][4]
-    workoutid1 = find[0][0]
+    exec = find[0][4] #the lst of exer of the first workout
+    workoutid1 = find[0][0] #the workout id of the first workout
 
     for f in find:
         date1 = f[3]
@@ -583,6 +583,27 @@ def return_dates_in_order(dates_lst) -> list:
     return new_lst
 
 
+@app.get("/bring_info")
+def bring_info(name: str):
+    session = Session()
+
+    find = session.query(user_table).filter(user_table.c.name == name).first()
+
+    if find is not None:
+        first_name = find[2]
+        last_name = find[3]
+        phone_num = find[4]
+        email = find[5]
+        age = find[6]
+        gender = find[7]
+        goals = find[8]
+        response = {"first_name": first_name, "last_name": last_name, "phone_num": phone_num, "email": email,
+                    "age": age, "gender": gender, "goals": goals}
+
+    else:
+        response = {"first_name": "0", "last_name": "0", "phone_num": "0", "age": 0,
+                    "gender": "0", "goals": "0"}
+    return response
 
 
 

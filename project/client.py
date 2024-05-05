@@ -49,6 +49,15 @@ class Client:
 
         return response.json()
 
+    def check_email(self, email):
+        credentials = dict(email=email)
+
+        response = requests.get(
+            f"{self.server_address}/check_email",
+            params=credentials
+        )
+        return response.json()
+
     def signup(self, name, password):
         self.username = name
         self.password = password
@@ -168,5 +177,15 @@ class Client:
             f"{self.server_address}/improve_with_params2",
             params=credentials
         )
+        return response.json()
+
+    def bring_info(self, name):
+        credentials = dict(name=name)
+
+        response = requests.get(
+            f"{self.server_address}/bring_info",
+            params=credentials
+        )
+
         return response.json()
 

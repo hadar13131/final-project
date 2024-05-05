@@ -6,31 +6,57 @@ from project.client import Client
 
 
 class Profile_Page:
+
     def __init__(self, client:Client) -> None:
         self.page = None
         self.client = client
 
-        self.text1 = ft.Text("Profile Page", size=55, color='#8532B8', weight=ft.FontWeight.W_500,
+        self.text1 = ft.Text("YOUR Profile Page", size=55, color='#8532B8', weight=ft.FontWeight.W_500,
                              selectable=True, font_family="Elephant")
-
-        self.m1 = ft.Text("name", size=20, color='#8532B8')
-        self.m2 = ft.Text("user information", size=20, color='#8532B8')
-        self.m3 = ft.Text("YOUR WORKOUTS PLAN:", size=20, color='#8532B8')
 
         self.workout_table = self.return_workout_table()
 
-        self.profile_page_panel = ft.Column(
-            [
-                self.text1,
-                self.m1,
-                self.m2,
-                self.m3,
-                self.workout_table
+        self.button_show_info = ft.ElevatedButton(text="show details", on_click=self.show_your_info,
+                                                  bgcolor='#8532B8', color='white')
+
+        self.username1 = ft.TextField(label="user name", read_only=True, autofocus=True, border_color='#8532B8')
+        self.first_name = ft.TextField(label="first name", autofocus=True, border_color='#8532B8')
+        self.last_name = ft.TextField(label="last name", autofocus=True, border_color='#8532B8')
+        self.phone_number = ft.TextField(label="phone number", autofocus=True, border_color='#8532B8')
+        self.email = ft.TextField(label="email", read_only=True, autofocus=True, border_color='#8532B8')
+        self.age = ft.TextField(label="age", autofocus=True, border_color='#8532B8')
+
+        self.massageE = ft.TextField(read_only=True, border="none", color='#A8468C')
+
+        # self.gender = ft.TextField(label="gender", autofocus=True, border_color='#8532B8')
+        self.gender = ft.Dropdown(
+            label="gender",
+            hint_text="Choose your gender",
+            options=[
+                ft.dropdown.Option("Female"),
+                ft.dropdown.Option("Male"),
+                ft.dropdown.Option("Other"),
             ]
         )
 
-        self.titel1 = ft.Text("PROFILE PAGE", size=30, color='#8532B8', weight=ft.FontWeight.W_500,
-                                selectable=True, font_family="Elephant", text_align=ft.alignment.center)
+        self.goals = ft.TextField(label="goals", autofocus=True, border_color='#8532B8')
+
+        self.button1 = ft.ElevatedButton(text="change", on_click=self.change_your_info, bgcolor='#8532B8', color='white')
+
+        self.info_page = ft.Column([
+            self.username1,
+            self.email,
+            self.first_name,
+            self.last_name,
+            self.phone_number,
+            self.age,
+            self.gender,
+            self.goals,
+            self.button1,
+            self.massageE
+            ]
+        )
+
 
         self.count_workouts = ft.Column(
 
@@ -89,17 +115,53 @@ class Profile_Page:
 
                 ft.Column([]),
 
-                # ft.Row(
-                #     controls=[
-                #         chart1
-                #     ],
-                # )
             ],
             alignment=ft.MainAxisAlignment.CENTER
         )
 
-    def change_your_info(self):
-        ...
+    def show_your_info(self, e: ft.ControlEvent) -> None:
+
+        info1 = self.client.bring_info(self.client.username)
+
+        self.username1.value = self.client.username
+        self.email.value = info1["email"]
+        self.first_name.value = info1["first_name"]
+        self.last_name.value = info1["last_name"]
+        self.phone_number.value = info1["phone_num"]
+        self.age.value = info1["age"]
+        self.gender.value = info1["gender"]
+        self.goals.value = info1["goals"]
+
+        self.page.clean()
+        self.page.add(self.info_page)
+        self.page.update()
+
+
+    def change_your_info(self, e: ft.ControlEvent):
+        username1 = self.client.username
+        firstname = self.first_name.value
+        lastname = self.last_name.value
+        phone_number = self.phone_number.value
+        email = self.email.value
+        age = int(self.age.value)
+        gender = self.gender.value
+        goals = self.goals.value
+
+        if firstname and lastname and phone_number and age and gender and goals:
+            response = self.client.fill_info(name=username1, first_name=firstname, last_name=lastname,
+                                             phone_num=phone_number, email=email, age=age, gender=gender, goals=goals)
+            self.massageE.value = response["response"]
+
+            if self.massageE.value == "the information added":
+                self.massageE.value = "the information changed"
+                # row = ft.Row([self.button_Next])
+                # self.page.add(row)
+                self.page.update()
+
+        else:
+            self.massageE.value = "please fill the all fields"
+            self.page.update()
+
 
     def return_workout_table(self):
 
@@ -154,8 +216,9 @@ class Profile_Page:
         self.page = page
         self.page.scroll = ft.ScrollMode.ALWAYS
 
-        self.page.add(self.titel1)
+        self.page.add(self.text1)
         self.page.add(ft.Row([self.count_workouts]))
+        self.page.add(self.button_show_info)
 
         self.page.add(ft.Column([self.table1]))
 
@@ -172,7 +235,7 @@ class Profile_Page:
 
 
 def main() -> None:
-    ft.app(target=Profile_Page().main)
+    ft.app(target=Profile_Page.main)
 
 
 if __name__ == "__main__":

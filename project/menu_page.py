@@ -15,7 +15,10 @@ from fl4 import ShowImprove1
 import try2
 from fl import show_improvement
 from fl import add_workout
-from fl import profil_page
+from fl import profile_page
+
+import project.try6
+import project.try7
 
 
 
@@ -55,18 +58,12 @@ class MenuApp:
         self.page = page
         if selected_index == 0: #profile page
             self.page.clean()
-            app_instance = profil_page.Profile_Page(client=self.client)
+            app_instance = profile_page.Profile_Page(client=self.client)
             app_instance.main(self.page)
-            # self.page.add(ft.SafeArea(self.profile_page()))
-            # app_instance = App3()
-            # page = app_instance.main(page)
-            # page.clean()
-
-            # page.add(add_workout_page(page))  # Replace the current page with Commute Page
 
         elif selected_index == 1: #calendar
             self.page.clean()
-            app_instance = add_workout.CalendarApp(client=self.client)
+            app_instance = project.try7.CalendarApp(client=self.client)
             app_instance.main(self.page, self.client)
 
         elif selected_index == 2: #improvment

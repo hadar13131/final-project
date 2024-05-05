@@ -13,7 +13,12 @@ class ShowImproveGraps:
         self.page = None
         self.client = client
 
+        self.exercises_name_lst = self.client.user_exer_lst
+
         self.exercise_name = ft.TextField(label="exercise name", label_style=ft.TextStyle(color=ft.colors.BLACK), autofocus=True, border_color=ft.colors.WHITE)
+        # self.search = ft.SearchBar(
+        #
+        # )
         self.s_date_text = ft.Text("start date-", size=20, color='#8532B8')
         self.day1 = ft.TextField(label="day", autofocus=True, border_color='#8532B8')
         self.month1 = ft.TextField(label="month", autofocus=True, border_color='#8532B8')

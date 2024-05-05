@@ -10,6 +10,7 @@ from datetime import datetime
 from client import Client
 import connect_page
 from fl.login_signup import LoginPage
+from fl.login_signup import SignUpPage
 
 
 class First_page:
@@ -53,7 +54,7 @@ class First_page:
     def go_to_signup(self, e: ft.ControlEvent) -> None:
         # Function to navigate to App3 page
         self.page.clean()
-        app_instance = connect_page.App()
+        app_instance = SignUpPage()
         app_instance.main(self.page)
 
     def go_to_learnmore(self, e: ft.ControlEvent) -> None:
