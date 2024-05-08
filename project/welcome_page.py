@@ -5,10 +5,7 @@ import calendar
 from datetime import datetime
 
 import flet as ft
-import calendar
-from datetime import datetime
-from client import Client
-import connect_page
+
 from fl.login_signup import LoginPage
 from fl.login_signup import SignUpPage
 

@@ -11,6 +11,7 @@ from project.client import Client
 
 from project.menu_page import MenuApp
 
+import project.check_errors as c_e
 
 class LoginPage:
     def __init__(self) -> None:
@@ -62,11 +63,16 @@ class LoginPage:
 
         # if the user put username and password
         if email and username and password:
-            response = self.client.authenticate2(email=email, name=username, password=password)
-            self.massageL1.value = response["response"]
-            if self.massageL1.value == "user authenticated":
-                self.page.add(self.button_Next)
-            self.page.update()
+            if c_e.is_valid_email(email):
+                response = self.client.authenticate2(email=email, name=username, password=password)
+                self.massageL1.value = response["response"]
+                if self.massageL1.value == "user authenticated":
+                    self.page.add(self.button_Next)
+                self.page.update()
+
+            else:
+                self.massageL1.value = "the email is not write correctly"
+                self.page.update()
 
         # if the user put password and not username
         elif password and (not username) and email:
@@ -233,14 +239,17 @@ class SignUpPage:
     def go_to_check_email(self, e: ft.ControlEvent) -> None:
         email = self.email.value
         if email:
-            response = self.client.check_email(email)
-            self.massageE.value = response["response"]
+            if c_e.is_valid_email(email):
+                response = self.client.check_email(email)
+                self.massageE.value = response["response"]
 
-            if self.massageE.value == "the email is valid":
+                if self.massageE.value == "the email is valid":
 
-                self.page.clean()
-                row = ft.Row([self.main_panel_signup])
-                self.page.add(row)
+                    self.page.clean()
+                    row = ft.Row([self.main_panel_signup])
+                    self.page.add(row)
+            else:
+                self.massageE.value = "the email is not write correctly"
 
         else:
             self.massageE.value = "please enter your email"
@@ -344,78 +353,6 @@ if __name__ == "__main__":
 
 
 
-class DeleteUserPage:
-    def __init__(self) -> None:
-        self.page = None
-        self.client = Client()
 
-        self.text3 = ft.Text("delete", size=55, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True,
-                             font_family="Elephant")
-        self.username3 = ft.TextField(label="User Name", autofocus=True, border_color='#8532B8')
-        self.password3 = ft.TextField(label="Password", autofocus=True, password=True, can_reveal_password=True,
-                                      border_color='#8532B8')
-        self.button3 = ft.ElevatedButton(text="Delete", on_click=self.click3, bgcolor='#8532B8', color='white')
-        self.massageD3 = ft.TextField(read_only=True, border="none", color='#A8468C')
-
-        self.main_panel_delete = ft.Column(
-            [
-                self.text3,
-                self.username3,
-                self.password3,
-                self.button3,
-                self.massageD3
-            ]
-            # ,
-            # scroll=ft.ScrollMode.ALWAYS,
-            # height=100
-        )
-
-    def click3(self, e: ft.ControlEvent) -> None:
-        username = self.username3.value
-        password = self.password3.value
-
-        self.username3.error_text = ""
-        self.password3.error_text = ""
-
-        if username and password:
-            response = self.client.delete(username, password)
-            self.massageD3.value = response["response"]
-
-            self.page.update()
-
-        elif (not username) and password:
-            self.username3.error_text = "Please enter your username"
-            self.page.update()
-
-        elif (not password) and username:
-            self.password3.error_text = "Please enter your password"
-            self.page.update()
-
-        else:
-            self.password3.error_text = "Please enter your password"
-            self.username3.error_text = "Please enter your username"
-            self.page.update()
-
-    def main(self, page: ft.Page) -> None:
-        self.page = page
-        self.page.scroll = ft.ScrollMode.ALWAYS
-
-        row_container = ft.Row([self.main_panel_delete], auto_scroll=True)
-        row_container.main_alignment = ft.MainAxisAlignment.CENTER
-
-        row_container.width = 650
-        self.page.add(self.main_panel_delete)
-
-        self.page.horizontal_alignment = 'CENTER'
-        self.page.vertical_alignment = 'CENTER'
-
-        self.page.update()
-
-def main() -> None:
-    ft.app(target=DeleteUserPage().main)
-
-
-if __name__ == "__main__":
-    main()
 
 

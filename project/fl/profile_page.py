@@ -174,6 +174,8 @@ class Profile_Page:
         name_lst = self.future_workouts_by_value(value=2)
         workoutinfo_lst = self.future_workouts_by_value(value=4)
 
+
+
         row_lst = []
 
         for i in range(len(date_lst)):
@@ -236,6 +238,49 @@ class Profile_Page:
 
 def main() -> None:
     ft.app(target=Profile_Page.main)
+
+
+if __name__ == "__main__":
+    main()
+
+
+class HomePage:
+    def __init__(self, client: Client) -> None:
+        self.page = None
+        self.client = client
+
+        self.text1 = ft.Text("HomePage", size=55, color='#8532B8', weight=ft.FontWeight.W_500,
+                             selectable=True, font_family="Elephant")
+
+        self.m1 = ft.Text("count days", size=20, color='#8532B8')
+        self.m2 = ft.Text("week plan", size=20, color='#8532B8')
+
+        self.home_page_panel = ft.Column(
+            [
+                self.text1,
+                self.m1,
+                self.m2
+            ]
+        )
+
+    def main(self, page: ft.Page) -> None:
+        self.page = page
+        self.page.scroll = ft.ScrollMode.ALWAYS
+
+        row_container = ft.Row([self.home_page_panel])
+        row_container.main_alignment = ft.MainAxisAlignment.CENTER
+
+        row_container.width = 920
+        self.page.add(row_container)
+
+        self.page.horizontal_alignment = 'CENTER'
+        self.page.vertical_alignment = 'CENTER'
+
+        self.page.update()
+
+
+def main() -> None:
+    ft.app(target=HomePage.main)
 
 
 if __name__ == "__main__":

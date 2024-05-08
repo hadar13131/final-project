@@ -5,47 +5,32 @@ import json
 
 import calendar
 from datetime import datetime
-from fl4 import AddWorkout
-from fl4 import Add_Exercise
-from fl4 import App5
-from fl4 import HomePage
-from fl4 import CalendarApp
-from fl4 import Profile_Page
-from fl4 import ShowImprove1
-import try2
 from fl import show_improvement
 from fl import add_workout
 from fl import profile_page
 
-import project.try6
-import project.try7
-
-
+import fl.login_signup
+import fl.deleteuser_signout
 
 class MenuApp:
     def __init__(self, client: Client) -> None:
         self.page = None
         self.client = client
 
-    def profile_page(self):
-        app_instance = Profile_Page(client=self.client)
-        row_container = ft.Row([app_instance.profile_page_panel])
-        return row_container
-    def workout_calnder_page(self):
-        app_instance = CalendarApp(self.client)
-        return ft.SafeArea(ft.Text("workout calnder page"))
-    def show_improvement_page(self):
-        app_instance = App5(client=self.client)
-        row_container = ft.Row([app_instance.show_improvement_panel])
-        return row_container
-        # return ft.SafeArea(ft.Text("show_improvement_page"))
+
+    def handel_delete_user(self, e=None):
+        self.page.clean()
+        app_instance = fl.deleteuser_signout.DeleteUserPage(self.client)
+        row_container = ft.Row([app_instance.main_panel_delete])
+        self.page.add(row_container)
+        self.page.update()
 
     def handle_home_click(self, e=None):
         self.show_home_page()
 
     def show_home_page(self):
         self.page.clean()
-        app_instance = HomePage(self.client)
+        app_instance = profile_page.HomePage(self.client)
         row_container = ft.Row([app_instance.home_page_panel])
         self.page.add(row_container)
         self.page.update()
@@ -63,7 +48,7 @@ class MenuApp:
 
         elif selected_index == 1: #calendar
             self.page.clean()
-            app_instance = project.try7.CalendarApp(client=self.client)
+            app_instance = add_workout.CalendarApp(client=self.client)
             app_instance.main(self.page, self.client)
 
         elif selected_index == 2: #improvment
@@ -83,7 +68,7 @@ class MenuApp:
             active_color=ft.colors.BLACK,
             on_change=lambda e: self.change_page(e, self.page),
             destinations=[
-                ft.NavigationDestination(icon=ft.icons.ADD_CIRCLE_OUTLINE, label="Add workout"),
+                ft.NavigationDestination(icon=ft.icons.PERSON_OUTLINE_ROUNDED, label="Profile Page"),
                 ft.NavigationDestination(icon=ft.icons.CALENDAR_TODAY, label="Calendar"),
                 ft.NavigationDestination(icon=ft.icons.TRENDING_UP_ROUNDED, label="progress"),
             ]
@@ -101,7 +86,13 @@ class MenuApp:
             bgcolor=ft.colors.SURFACE_VARIANT,
             actions=[
                 ft.IconButton(ft.icons.HOME, on_click=self.handle_home_click),
-                ft.Text("HELLO " + self.client.first_name),
+                ft.ElevatedButton(text="sign out", on_click=self.handel_delete_user, bgcolor='#8532B8',
+                                  color='white'),
+                ft.ElevatedButton(text="delete my user", on_click=self.handel_delete_user, bgcolor='#8532B8',
+                                  color='white'),
+
+                # ft.Text("HELLO " + self.client.first_name),
+                ft.Text(""),
                 ft.Text(datetime.now().strftime("%x")),
                 ft.PopupMenuButton(
                     items=[

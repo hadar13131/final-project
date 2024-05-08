@@ -9,6 +9,7 @@ import calendar
 from datetime import datetime
 from project.client import Client
 
+
 class ShowTheWorkout:
     def __init__(self, client: Client, date) -> None:
         self.page = None
@@ -23,8 +24,6 @@ class ShowTheWorkout:
 
         self.workout_name = ft.TextField(label="name of workout", autofocus=True, border_color='#8532B8')
         self.massage = ft.TextField(read_only=True, border="none", color='#A8468C')
-
-
 
         self.workout_info = ft.Container(
             content=ft.Row(
@@ -53,9 +52,6 @@ class ShowTheWorkout:
         #     ]
         # )
 
-
-
-
     def date_workout(self):
         lst = []
         for index in range(len(self.workout_lst)):
@@ -77,46 +73,41 @@ class ShowTheWorkout:
                 self.page.add(ft.Column([i]))
                 self.page.update()
 
-
-
-
     def show_workout(self, lst):
         format_workout_lst = []
 
         for i in lst:
             temp = ft.Container(
-                        content=ft.Column(
+                content=ft.Column(
+                    [
+                        ft.Row(
                             [
-                                ft.Row(
-                                    [
-                                        ft.Text("Workout name- " + i[2], size=20, color=ft.colors.BLACK,
-                                                weight=ft.FontWeight.W_500, selectable=True, font_family="Elephant",
-                                                text_align=ft.alignment.center),
+                                ft.Text("Workout name- " + i[2], size=20, color=ft.colors.BLACK,
+                                        weight=ft.FontWeight.W_500, selectable=True, font_family="Elephant",
+                                        text_align=ft.alignment.center),
 
-                                        ft.Text("date- " + str(i[3]), size=20, color=ft.colors.BLACK,
-                                                weight=ft.FontWeight.W_500, selectable=True, font_family="Elephant",
-                                                text_align=ft.alignment.center)
-                                    ]
-                                ),
-
-                                ft.ExpansionTile(
-                                    title=ft.Text(i[2] + " exercises-"),
-                                    subtitle=ft.Text("TAP TO SEE THE EXERCISES"),
-                                    affinity=ft.TileAffinity.LEADING,
-                                    # initially_expanded=True,
-                                    collapsed_text_color=ft.colors.BLUE,
-                                    text_color=ft.colors.BLUE,
-                                    controls=self.format_exercise_lst(i[4])
-                                )
+                                ft.Text("date- " + str(i[3]), size=20, color=ft.colors.BLACK,
+                                        weight=ft.FontWeight.W_500, selectable=True, font_family="Elephant",
+                                        text_align=ft.alignment.center)
                             ]
+                        ),
+
+                        ft.ExpansionTile(
+                            title=ft.Text(i[2] + " exercises-"),
+                            subtitle=ft.Text("TAP TO SEE THE EXERCISES"),
+                            affinity=ft.TileAffinity.LEADING,
+                            # initially_expanded=True,
+                            collapsed_text_color=ft.colors.BLUE,
+                            text_color=ft.colors.BLUE,
+                            controls=self.format_exercise_lst(i[4])
                         )
-                    )
+                    ]
+                )
+            )
 
             format_workout_lst.append(temp)
 
         return format_workout_lst
-
-
 
     def format_exercise_lst(self, e_lst):
         lst = []
@@ -198,11 +189,11 @@ if __name__ == "__main__":
     main()
 
 
-class AddWorkout:
+class AddFullWorkout:
     def __init__(self, client: Client, date) -> None:
         self.page = None
         self.client = client
-        self.date = datetime.strptime(date, "%B %d, %Y") #from string to datetime
+        self.date = datetime.strptime(date, "%B %d, %Y")  # from string to datetime
         self.massage_date = ft.TextField(value=date, read_only=True, border="none", color='#A8468C')
 
         self.changed_date = ""
@@ -236,7 +227,8 @@ class AddWorkout:
             [
                 ft.Text("ADD NEW WORKOUT:", size=55, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True,
                         font_family="Arial Rounded MT Bold"),
-                ft.Text("ADD THE NAME OF YOUR WORKOUT:", size=25, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True,
+                ft.Text("ADD THE NAME OF YOUR WORKOUT:", size=25, color='#8532B8', weight=ft.FontWeight.W_500,
+                        selectable=True,
                         font_family="Arial Rounded MT Bold"),
                 self.workout_name,
                 ft.Row(
@@ -247,7 +239,319 @@ class AddWorkout:
                         self.button_change_date
                     ]
                 ),
-                ft.Text("CONTINUE TO ADD NEW EXERCISE-", size=35, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True,
+                ft.Text("CONTINUE TO ADD NEW EXERCISE-", size=35, color='#8532B8', weight=ft.FontWeight.W_500,
+                        selectable=True,
+                        font_family="Arial Rounded MT Bold"),
+                self.button1
+
+            ]
+        )
+
+        self.name1 = ft.TextField(label="exercise name", autofocus=True, border_color='#8532B8')
+
+        self.power_text = ft.Text("the exercise is power-")
+        self.power1 = ft.RadioGroup(content=ft.Row([
+            ft.Radio(value="True", label="Yes"),
+            ft.Radio(value="False", label="No")]))
+
+        self.text2 = ft.Text("add a set:")
+        self.repetitionsS1 = ft.TextField(label="repetitions", autofocus=True, border_color='#8532B8')
+        self.timeS1 = ft.TextField(label="time", autofocus=True, border_color='#8532B8')
+        self.weightS1 = ft.TextField(label="weight", autofocus=True, border_color='#8532B8')
+        self.distance_KMS1 = ft.TextField(label="distance_KM", autofocus=True, border_color='#8532B8')
+
+        self.button4 = ft.ElevatedButton(text="add the exercise to workout", on_click=self.add_exercise,
+                                         bgcolor='#8532B8',
+                                         color='white')
+
+        # self.button_add_set = ft.ElevatedButton(text="add set", on_click=self.click, bgcolor='#8532B8',
+        #                                         color='white')
+
+        self.addexerciseM = ft.TextField(read_only=True, border="none", color='#A8468C')
+
+        self.exercise_info = ft.Column([
+            ft.Text("ADD NEW EXERCISE- ", size=30, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True,
+                    font_family="Arial Rounded MT Bold"),
+            self.name1,
+            ft.Text("THE EXERCISE IS POWER? ", size=20, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True,
+                    font_family="Arial Rounded MT Bold"),
+            self.power1,
+            self.button4
+        ])
+
+        self.button_set = ft.ElevatedButton(text="add set to exercise", on_click=self.add_set, bgcolor='#8532B8',
+                                            color='white')
+
+        self.want_to_add_set_info = ft.Column(
+            [
+                self.button_set
+            ]
+        )
+
+        self.text2 = ft.Text("add a set:")
+        self.repetitionsS1 = ft.TextField(label="repetitions", autofocus=True, border_color='#8532B8')
+        self.timeS1 = ft.TextField(label="time", autofocus=True, border_color='#8532B8')
+        self.weightS1 = ft.TextField(label="weight", autofocus=True, border_color='#8532B8')
+        self.distance_KMS1 = ft.TextField(label="distance_KM", autofocus=True, border_color='#8532B8')
+
+        self.button_finish = ft.ElevatedButton(text="add the set to exercise", on_click=self.add_set, bgcolor='#8532B8',
+                                               color='white')
+
+        self.addsetM = ft.TextField(read_only=True, border="none", color='#A8468C')
+
+        self.set_info = ft.Column([
+            ft.Text("ADD NEW SET- ", size=30, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True,
+                    font_family="Arial Rounded MT Bold"),
+            self.repetitionsS1,
+            self.timeS1,
+            self.weightS1,
+            self.distance_KMS1,
+            self.button_finish,
+            self.addsetM
+        ])
+
+    def change_date1(self, e):
+        self.changed_date = self.date_picker1.value
+        # self.massageD1.value = str(self.date_picker1.value)
+        self.massage_date.value = self.date_picker1.value.strftime("%x")
+        self.page.update()
+        print(f"Date picker 1 changed, value is {self.date_picker1.value}")
+
+    def date_picker_dismissed1(self, e):
+        print(f"Date picker dismissed, value is {self.date_picker1.value}")
+
+    def add_workout(self, e: ft.ControlEvent):
+        # submit the workout name, and date + show exercise format
+        # add the workout to the database
+        userid1 = self.client.username
+        workout_name = self.workout_name.value
+        date = self.date
+
+        response2 = self.client.addworkout(userid=userid1, workout_name=workout_name, date=date, exerciselist="")
+        self.massage2.value = response2["response"]
+
+        d1 = date.strftime('%Y-%m-%d')
+        self.workout = Workout(d1, workout_name, [])
+        self.workout11 = json.dumps(self.workout.dump())
+
+        self.exercise_details = []
+
+        self.page.clean()
+
+        self.page.add(
+            # ft.Row([self.show_workout_details(self.workout11)]),
+            ft.Row([self.exercise_info])
+        )
+
+        self.page.update()
+
+    def show_workout_details(self, workout):
+        workout2 = json.loads(workout)
+        self.workout_info = ft.Container(
+            content=ft.Row(
+                controls=[
+                    ft.Column(
+                        [
+                            ft.Text("Workout name- " + workout2["workout_name"], size=20, color=ft.colors.BLACK,
+                                    weight=ft.FontWeight.W_500, selectable=True, font_family="Elephant",
+                                    text_align=ft.alignment.center),
+
+                            ft.Text("Workout date- " + workout2["date"], size=20, color=ft.colors.BLACK,
+                                    weight=ft.FontWeight.W_500, selectable=True, font_family="Elephant",
+                                    text_align=ft.alignment.center),
+
+                            ft.Column(self.show_exercise())
+                        ]
+                    )
+                ]
+            )
+        )
+
+        return self.workout_info
+
+    def add_exercise(self, e: ft.ControlEvent):
+        userid1 = self.client.username
+        date = self.date
+        workout_name = self.workout_name
+
+        name1 = self.name1.value
+        power1 = self.power1.value
+
+        repetitionsS1 = self.repetitionsS1.value
+        timeS1 = self.timeS1.value
+        weightS1 = self.weightS1.value
+        distance_KMS1 = self.distance_KMS1.value
+
+        sets2 = Set(repetitions=repetitionsS1, time=timeS1, weight=weightS1, distance_KM=distance_KMS1)
+
+        self.exerlst = Exercise(name=name1, power=power1, sets=[sets2])
+        self.exerlst = json.dumps(self.exerlst.dump())
+
+        response2 = self.client.addexercisetoworkout(userid=userid1, date=date, workout_name=workout_name,
+                                                     exercise=self.exerlst)
+
+        self.addexerciseM.value = response2["response"]
+        self.page.update()
+
+        self.button_set1 = ft.ElevatedButton(text="add set to exercise", on_click=self.add_set, bgcolor='#8532B8',
+                                            color='white')
+
+        # self.page.add(self.show_workout_details(workout=self.workout11))
+        # s = self.show_exercise()
+        # for i in s:
+        #     self.page.add(i)
+        self.page.add(self.set_info)
+        self.page.add(self.button_set1)
+        # app_instance = AddSet(client=self.client, workout=self.workout11, execrise=self.exerlst1)
+        # app_instance.main(self.page)
+
+    def show_exercise(self):
+        userid1 = self.client.username
+        date = self.date
+        workout_name = self.workout_name
+
+        name1 = self.name1.value
+        power1 = self.power1.value
+
+        self.exercise_add = ft.Container()
+
+        if name1 and power1:
+            response2 = self.client.addexercisetoworkout(userid=userid1, date=date, workout_name=workout_name,
+                                                         exercise=self.exerlst)
+
+            self.addexerciseM.value = response2["response"]
+            self.page.update()
+
+            self.page.clean()
+
+            lst_sets_control = "no sets yet"
+
+            self.exercise_add = ft.Container(
+                content=ft.Column(
+                    controls=[
+                        ft.ExpansionTile(
+                            title=ft.Text("Exercise name- " + name1),
+                            subtitle=ft.Text("power- " + power1),
+                            affinity=ft.TileAffinity.LEADING,
+                            initially_expanded=True,
+                            collapsed_text_color=ft.colors.BLUE,
+                            text_color=ft.colors.BLUE,
+                            controls=[ft.ListTile(title=ft.Text(lst_sets_control))]
+                        )
+                    ]
+                )
+
+            )
+
+        self.exercise_details.append(self.exercise_add)
+
+        return self.exercise_details
+
+    def finish_sets(self, e: ft.ControlEvent):
+        userid = self.client.username
+
+        repetitionsS1 = self.repetitionsS1.value
+        timeS1 = self.timeS1.value
+        weightS1 = self.weightS1.value
+        distance_KMS1 = self.distance_KMS1.value
+
+        sets2 = Set(repetitions=repetitionsS1, time=timeS1, weight=weightS1, distance_KM=distance_KMS1)
+
+        response = self.client.addsettoexercise(userid=userid, date=self.date, workout_name=self.workout_name,
+                                                exercise=self.name1.value, sets=json.dumps(sets2.dump()))
+
+        self.addsetM.value = response["response"]
+        # self.massage3.value = response.get("response", "Default Value")
+        self.page.update()
+
+        self.page.clean()
+        self.page.add(self.show_workout_details(self.workout))
+
+    def add_set(self, e: ft.ControlEvent):
+        userid = self.client.username
+
+        repetitionsS1 = self.repetitionsS1.value
+        timeS1 = self.timeS1.value
+        weightS1 = self.weightS1.value
+        distance_KMS1 = self.distance_KMS1.value
+
+        sets2 = Set(repetitions=repetitionsS1, time=timeS1, weight=weightS1, distance_KM=distance_KMS1)
+
+        response = self.client.addsettoexercise2(userid=userid, date=str(self.date),
+                                                 workout_name=self.workout_name.value, exercise_name=self.name1.value,
+                                                 power=self.power1.value, sets=json.dumps(sets2.dump()))
+
+        self.addsetM.value = response["response"]
+        # self.massage3.value = response.get("response", "Default Value")
+        self.page.update()
+
+    def main(self, page: ft.Page) -> None:
+        self.page = page
+        self.page.scroll = ft.ScrollMode.ALWAYS
+        self.page.add(ft.Column([self.first_panel]))
+        self.page.update()
+
+
+def main() -> None:
+    ft.app(target=AddFullWorkout.main)
+
+
+if __name__ == "__main__":
+    main()
+
+
+class AddWorkout:
+    def __init__(self, client: Client, date) -> None:
+        self.page = None
+        self.client = client
+        self.date = datetime.strptime(date, "%B %d, %Y")  # from string to datetime
+        self.massage_date = ft.TextField(value=date, read_only=True, border="none", color='#A8468C')
+
+        self.changed_date = ""
+        self.date_picker1 = ft.DatePicker(
+            on_change=self.change_date1,
+            on_dismiss=self.date_picker_dismissed1,
+        )
+
+        self.button_change_date = ft.ElevatedButton(
+            "change date",
+            color=ft.colors.BLACK,
+            icon=ft.icons.CALENDAR_MONTH,
+            on_click=lambda _: self.date_picker1.pick_date(),
+        )
+
+        self.text1 = ft.Text("ADD NEW WORKOUT:", size=55, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True,
+                             font_family="Arial Rounded MT Bold")
+
+        self.workout_name = ft.TextField(label="name of workout", autofocus=True, border_color='#8532B8')
+
+        self.day = ft.TextField(label="day", autofocus=True, border_color='#8532B8')
+        self.month = ft.TextField(label="month", autofocus=True, border_color='#8532B8')
+        self.year = ft.TextField(label="year", autofocus=True, border_color='#8532B8')
+
+        self.button1 = ft.ElevatedButton(text="add exercise", on_click=self.add_workout, bgcolor='#8532B8',
+                                         color='white')
+
+        self.massage2 = ft.TextField(read_only=True, border="none", color='#A8468C')
+
+        self.first_panel = ft.Column(
+            [
+                ft.Text("ADD NEW WORKOUT:", size=55, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True,
+                        font_family="Arial Rounded MT Bold"),
+                ft.Text("ADD THE NAME OF YOUR WORKOUT:", size=25, color='#8532B8', weight=ft.FontWeight.W_500,
+                        selectable=True,
+                        font_family="Arial Rounded MT Bold"),
+                self.workout_name,
+                ft.Row(
+                    [
+                        ft.Text("THE DATE IS- ", size=25, color='#8532B8', weight=ft.FontWeight.W_500,
+                                selectable=True, font_family="Arial Rounded MT Bold"),
+                        self.massage_date,
+                        self.button_change_date
+                    ]
+                ),
+                ft.Text("CONTINUE TO ADD NEW EXERCISE-", size=35, color='#8532B8', weight=ft.FontWeight.W_500,
+                        selectable=True,
                         font_family="Arial Rounded MT Bold"),
                 self.button1
 
@@ -265,8 +569,8 @@ class AddWorkout:
         print(f"Date picker dismissed, value is {self.date_picker1.value}")
 
     def add_workout(self, e: ft.ControlEvent):
-        #submit the workout name, and date + show exercise format
-        #add the workout to the database
+        # submit the workout name, and date + show exercise format
+        # add the workout to the database
         userid1 = self.client.username
         workout_name = self.workout_name.value
         date = self.date
@@ -286,7 +590,6 @@ class AddWorkout:
         app_instance.main(self.page)
 
     def show_workout_details(self, workout):
-
         workout2 = json.loads(workout)
         self.workout_info = ft.Container(
             content=ft.Row(
@@ -348,7 +651,8 @@ class AddExercise:
         self.weightS1 = ft.TextField(label="weight", autofocus=True, border_color='#8532B8')
         self.distance_KMS1 = ft.TextField(label="distance_KM", autofocus=True, border_color='#8532B8')
 
-        self.button4 = ft.ElevatedButton(text="add the exercise to workout", on_click=self.add_exercise, bgcolor='#8532B8',
+        self.button4 = ft.ElevatedButton(text="add the exercise to workout", on_click=self.add_exercise,
+                                         bgcolor='#8532B8',
                                          color='white')
 
         # self.button_add_set = ft.ElevatedButton(text="add set", on_click=self.click, bgcolor='#8532B8',
@@ -367,7 +671,6 @@ class AddExercise:
         ])
 
     def show_workout_details(self, workout):
-
         self.workout_info = ft.Container(
             content=ft.Row(
                 controls=[
@@ -412,7 +715,6 @@ class AddExercise:
         self.addexerciseM.value = response2["response"]
         self.page.update()
 
-
         self.page.add(self.show_workout_details(workout=self.workout), self.exercise_details)
         app_instance = AddSet(client=self.client, workout=self.workout11, execrise=exerlst)
         app_instance.main(self.page)
@@ -431,6 +733,7 @@ class AddExercise:
         self.page.vertical_alignment = 'CENTER'
 
         self.page.update()
+
 
 def main() -> None:
     ft.app(target=AddExercise.main)
@@ -459,7 +762,7 @@ class AddSet:
         self.button4 = ft.ElevatedButton(text="add the set to exercise", on_click=self.add_set, bgcolor='#8532B8',
                                          color='white')
         self.button_finish = ft.ElevatedButton(text="add the set to exercise", on_click=self.add_set, bgcolor='#8532B8',
-                                         color='white')
+                                               color='white')
 
         self.addsetM = ft.TextField(read_only=True, border="none", color='#A8468C')
 
@@ -691,7 +994,6 @@ class CalendarApp:
                 self.content = ft.Text(f"{self.day}", text_align="center", color="#F509C8")
                 # self.content = ft.Text(f"{self.day} \n**", text_align="center")
 
-
         def selected(self, e: ft.TapEvent):
             if self.date_instnace:
                 for row in self.date_instnace.controls[1:]:
@@ -707,11 +1009,8 @@ class CalendarApp:
                         if date == e.control:
                             self.task_instnace.date.value = e.control.data
 
-
                 self.date_instnace.update()
                 self.task_instnace.update()
-
-
 
     class DateGrid(ft.Column):
         def __init__(self, year: int, month: int, task_instance: object, client: Client) -> None:
@@ -803,7 +1102,6 @@ class CalendarApp:
                                     if int(self.client.user_workout_lst[index][3].strftime("%Y")) == year:
                                         event = True
 
-
                         row.controls.append(
                             CalendarApp.DateBox(
                                 day, event, self.format_date(day), self,
@@ -850,7 +1148,6 @@ class CalendarApp:
 
             self.date.value = f"{self.month_class[self.month]} {self.year}"
 
-
         def format_date(self, day: int) -> str:
 
             self.month_class = {
@@ -869,9 +1166,6 @@ class CalendarApp:
             }
 
             return f"{self.month_class[self.month]} {day}, {self.year}"
-
-
-
 
     @staticmethod
     def input_style(height: int):
@@ -895,10 +1189,10 @@ class CalendarApp:
                 label="Date", read_only=True, value=" ", **CalendarApp.input_style(38)
             )
             self.show_workout_info = ft.ElevatedButton(text="show workout info", on_click=self.go_to_show_workout_info,
-                                             bgcolor='#8532B8', color='white')
+                                                       bgcolor='#8532B8', color='white')
 
             self.button_add_w = ft.ElevatedButton(text="add workout", on_click=self.go_to_app,
-                                             bgcolor='#8532B8', color='white')
+                                                  bgcolor='#8532B8', color='white')
 
             self.event = ft.TextField(read_only=True, border="none", color=ft.colors.BLACK)
 
@@ -910,35 +1204,35 @@ class CalendarApp:
 
             self.controls = [ft.Row(
                 [
-                ft.Container(
-                    alignment=ft.alignment.top_center,
-                    bgcolor="#CCCCFF",
-                    margin=10,
-                    border_radius=10,
-                    padding=20,
-                    content=ft.Column([
-                        ft.Column(
-                            [
-                                self.date,
-                                self.event
-                            ]
-                        ),
+                    ft.Container(
+                        alignment=ft.alignment.top_center,
+                        bgcolor="#CCCCFF",
+                        margin=10,
+                        border_radius=10,
+                        padding=20,
+                        content=ft.Column([
+                            ft.Column(
+                                [
+                                    self.date,
+                                    self.event
+                                ]
+                            ),
 
-                        ft.Row(
-                            [
-                                self.show_workout_info,
-                                self.button_add_w
-                            ]
-                        )
-                    ])
-                )
-            ])]
+                            ft.Row(
+                                [
+                                    self.show_workout_info,
+                                    self.button_add_w
+                                ]
+                            )
+                        ])
+                    )
+                ])]
 
         def go_to_app(self, e: ft.ControlEvent) -> None:
             # Function to navigate to App3 page
             if self.date.value != " ":
                 self.page.clean()
-                app3_instance = AddWorkout(client=self.client, date=self.date.value)
+                app3_instance = AddFullWorkout(client=self.client, date=self.date.value)
                 app3_instance.main(self.page)
             else:
                 self.event.value = "please select date"

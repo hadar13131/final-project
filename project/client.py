@@ -107,6 +107,18 @@ class Client:
 
         return response.json()
 
+    def deleteworkout(self, userid, workout_name, date):
+        credentials = dict(userid=userid, workout_name=workout_name, date=date)
+
+        response = requests.get(
+            f"{self.server_address}/deleteworkout",
+            params=credentials
+        )
+
+        self.user_workout_lst = api.lst_of_workouts_by_username(self.username)
+
+        return response.json()
+
 
     def addexercisetoworkout(self, userid, date, workout_name, exercise):
         credentials = dict(userid=userid, date=date, workout_name=workout_name, exercise=exercise)
@@ -138,6 +150,18 @@ class Client:
 
         response = requests.get(
             f"{self.server_address}/addsettoexercise",
+            params=credentials
+        )
+
+        self.user_workout_lst = api.lst_of_workouts_by_username(self.username)
+        return response.json()
+
+    def addsettoexercise2(self, userid, date, workout_name, exercise_name, power, sets):
+        credentials = dict(userid=userid, date=date, workout_name=workout_name, exercise_name=exercise_name,
+                           power=power, sets=sets)
+
+        response = requests.get(
+            f"{self.server_address}/addsettoexercise2",
             params=credentials
         )
 
