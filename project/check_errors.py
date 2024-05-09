@@ -6,6 +6,9 @@ def is_numeric(value):
     if isinstance(value, (int, float)):
         return True
 
+    # elif value == "":
+    #     return True
+
     elif isinstance(value, str):
         return value.replace('.', '', 1).isdigit() or (value.count('.') == 1 and value.replace('.', '').isdigit())
 
@@ -56,6 +59,15 @@ def is_valid_email(email: str) -> bool:
 
     # Use the re.match function to check if the email matches the pattern
     if re.match(email_pattern, email):
+        return True
+    else:
+        return False
+
+
+def is_valid_phone_number(phone_number: str) -> bool:
+
+    # Check if the phone number starts with "05" and has exactly 10 digits
+    if phone_number.startswith("05") and len(phone_number) == 10 and phone_number.isdigit():
         return True
     else:
         return False

@@ -3,6 +3,7 @@ from project.models import Workout, Exercise, Set
 import calendar
 from datetime import datetime
 from project.client import Client
+import project.check_errors as c_e
 
 
 class Profile_Page:
@@ -19,11 +20,11 @@ class Profile_Page:
         self.button_show_info = ft.ElevatedButton(text="show details", on_click=self.show_your_info,
                                                   bgcolor='#8532B8', color='white')
 
-        self.username1 = ft.TextField(label="user name", read_only=True, autofocus=True, border_color='#8532B8')
+        self.username1 = ft.TextField(label="user name", read_only=True, autofocus=True, border_color=ft.colors.RED)
         self.first_name = ft.TextField(label="first name", autofocus=True, border_color='#8532B8')
         self.last_name = ft.TextField(label="last name", autofocus=True, border_color='#8532B8')
         self.phone_number = ft.TextField(label="phone number", autofocus=True, border_color='#8532B8')
-        self.email = ft.TextField(label="email", read_only=True, autofocus=True, border_color='#8532B8')
+        self.email = ft.TextField(label="email", read_only=True, autofocus=True, border_color=ft.colors.RED)
         self.age = ft.TextField(label="age", autofocus=True, border_color='#8532B8')
 
         self.massageE = ft.TextField(read_only=True, border="none", color='#A8468C')
@@ -148,14 +149,19 @@ class Profile_Page:
         goals = self.goals.value
 
         if firstname and lastname and phone_number and age and gender and goals:
-            response = self.client.fill_info(name=username1, first_name=firstname, last_name=lastname,
-                                             phone_num=phone_number, email=email, age=age, gender=gender, goals=goals)
-            self.massageE.value = response["response"]
+            if c_e.is_valid_phone_number(phone_number):
+                response = self.client.fill_info(name=username1, first_name=firstname, last_name=lastname,
+                                                 phone_num=phone_number, email=email, age=age, gender=gender, goals=goals)
+                self.massageE.value = response["response"]
 
-            if self.massageE.value == "the information added":
-                self.massageE.value = "the information changed"
-                # row = ft.Row([self.button_Next])
-                # self.page.add(row)
+                if self.massageE.value == "the information added":
+                    self.massageE.value = "the information changed"
+                    # row = ft.Row([self.button_Next])
+                    # self.page.add(row)
+                    self.page.update()
+
+            else:
+                self.massageE.value = "the phone number is not write correctly"
                 self.page.update()
 
         else:

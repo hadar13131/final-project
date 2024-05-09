@@ -307,15 +307,19 @@ class SignUpPage:
         goals = self.goals.value
 
         if firstname and lastname and phone_number and email and age and gender and goals:
-            response = self.client.fill_info(name=username1, first_name=firstname, last_name=lastname,
-                                             phone_num=phone_number, email=email, age=age, gender=gender, goals=goals)
-            self.massageF1.value = response["response"]
+            if c_e.is_valid_phone_number(phone_number):
+                response = self.client.fill_info(name=username1, first_name=firstname, last_name=lastname,
+                                                 phone_num=phone_number, email=email, age=age, gender=gender, goals=goals)
+                self.massageF1.value = response["response"]
 
-            if self.massageF1.value == "the information added":
-                row = ft.Row([self.button_Next])
-                self.page.add(row)
-            self.page.update()
+                if self.massageF1.value == "the information added":
+                    row = ft.Row([self.button_Next])
+                    self.page.add(row)
+                self.page.update()
 
+            else:
+                self.massageF1.value = "the phone number is not write correctly"
+                self.page.update()
         else:
             self.massageF1.value = "please fill the all fields"
             self.page.update()

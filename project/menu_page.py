@@ -86,10 +86,10 @@ class MenuApp:
             bgcolor=ft.colors.SURFACE_VARIANT,
             actions=[
                 ft.IconButton(ft.icons.HOME, on_click=self.handle_home_click),
-                ft.ElevatedButton(text="sign out", on_click=self.handel_delete_user, bgcolor='#8532B8',
-                                  color='white'),
-                ft.ElevatedButton(text="delete my user", on_click=self.handel_delete_user, bgcolor='#8532B8',
-                                  color='white'),
+                # ft.ElevatedButton(text="sign out", on_click=self.handel_delete_user, bgcolor='#8532B8',
+                #                   color='white'),
+                # ft.ElevatedButton(text="delete my user", on_click=self.handel_delete_user, bgcolor='#8532B8',
+                #                   color='white'),
 
                 # ft.Text("HELLO " + self.client.first_name),
                 ft.Text(""),

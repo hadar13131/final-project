@@ -292,6 +292,18 @@ class AddFullWorkout:
         weightS1 = self.weightS1.value
         distance_KMS1 = self.distance_KMS1.value
 
+        if repetitionsS1 == "":
+            repetitionsS1 = 0
+
+        if timeS1 == "":
+            timeS1 = 0
+
+        if weightS1 == "":
+            weightS1 = 0
+
+        if distance_KMS1 == "":
+            distance_KMS1 = 0
+
         if (c_e.is_numeric(repetitionsS1) and c_e.is_numeric(timeS1) and c_e.is_numeric(weightS1)
                 and c_e.is_numeric(distance_KMS1)):
             sets2 = Set(repetitions=repetitionsS1, time=timeS1, weight=weightS1, distance_KM=distance_KMS1)
