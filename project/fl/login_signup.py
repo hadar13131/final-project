@@ -9,8 +9,8 @@ import calendar
 from datetime import datetime
 from project.client import Client
 
-from project.menu_page import MenuApp
-
+from menu_page import MenuApp
+import welcome_page
 import project.check_errors as c_e
 
 class LoginPage:
@@ -33,6 +33,9 @@ class LoginPage:
         self.button_Next = ft.ElevatedButton(text="continue", on_click=self.go_to_menu, bgcolor='#8532B8',
                                              color='white')
 
+        self.button_Back = ft.ElevatedButton(text="BACK", on_click=self.back_to_welcome, bgcolor='#8532B8',
+                                             color='white')
+
         self.main_panel_login = ft.Column(
             [
                 self.text1,
@@ -41,8 +44,14 @@ class LoginPage:
                 self.username1,
                 self.password1,
                 self.button1,
-                self.massageL1
+                self.massageL1,
+                self.button_Back
             ])
+
+    def back_to_welcome(self, e: ft.ControlEvent) -> None:
+        self.page.clean()
+        app_instance = welcome_page.First_page()
+        app_instance.main(self.page)
 
     def go_to_menu(self, e: ft.ControlEvent) -> None:
         # Function to navigate to App3 page
@@ -67,7 +76,9 @@ class LoginPage:
                 response = self.client.authenticate2(email=email, name=username, password=password)
                 self.massageL1.value = response["response"]
                 if self.massageL1.value == "user authenticated":
-                    self.page.add(self.button_Next)
+                    self.page.clean()
+                    app_instance = MenuApp(client=self.client)
+                    app_instance.main(self.page)
                 self.page.update()
 
             else:
@@ -132,14 +143,19 @@ if __name__ == "__main__":
     main()
 
 
-
-
-
-
 class SignUpPage:
     def __init__(self) -> None:
         self.page = None
         self.client = Client()
+
+        self.button_Back = ft.ElevatedButton(text="BACK", on_click=self.back_to_welcome, bgcolor='#8532B8',
+                                             color='white')
+
+        self.button_Back_to_email = ft.ElevatedButton(text="BACK TO EMAIL", on_click=self.back_to_email,
+                                                      bgcolor='#8532B8', color='white')
+
+        self.button_Back_to_password = ft.ElevatedButton(text="BACK TO EMAIL", on_click=self.back_to_password,
+                                                      bgcolor='#8532B8', color='white')
 
         self.text2 = ft.Text("sign up", size=55, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True,
                              font_family="Elephant")
@@ -177,8 +193,6 @@ class SignUpPage:
         self.button_Next = ft.ElevatedButton(text="continue", on_click=self.go_to_menu, bgcolor='#8532B8',
                                              color='white')
 
-        self.button_fill_info = ft.ElevatedButton(text="continue to fill info", on_click=self.go_to_fill_info,
-                                                  bgcolor='#8532B8', color='white')
 
 
         self.email_panel = ft.Column(
@@ -191,7 +205,8 @@ class SignUpPage:
                         font_family="Elephant"),
                 self.email,
                 self.massageE,
-                ft.ElevatedButton(text="check email", on_click=self.go_to_check_email, bgcolor='#8532B8', color='white')
+                ft.ElevatedButton(text="check email", on_click=self.go_to_check_email, bgcolor='#8532B8', color='white'),
+                self.button_Back
             ]
         )
 
@@ -201,13 +216,15 @@ class SignUpPage:
                 self.username2,
                 self.password2,
                 self.button2,
-                self.massageS2
+                self.massageS2,
+                self.button_Back_to_email
             ]
         )
 
 
         self.main_panel_signup2 = ft.Column(
             [
+                self.button_Back_to_password,
                 self.text_info_title,
                 self.firstname2,
                 self.lastname2,
@@ -217,8 +234,8 @@ class SignUpPage:
                 self.gender,
                 self.goals,
                 self.button_send_info,
-                self.massageF1,
-                self.button_Next
+                self.massageF1
+                # self.button_Next
             ]
             # ,
             # scroll=ft.ScrollMode.ALWAYS,
@@ -230,10 +247,43 @@ class SignUpPage:
                 self.button_Next
             ])
 
-        self.main_panel_add_info = ft.Column(
-            [
-                self.button_fill_info
-            ])
+
+    def back_to_welcome(self, e: ft.ControlEvent) -> None:
+        self.page.clean()
+        app_instance = welcome_page.First_page()
+        app_instance.main(self.page)
+
+    def back_to_email(self, e: ft.ControlEvent) -> None:
+        self.page.clean()
+        row_container = ft.Row([self.email_panel], auto_scroll=True)
+        row_container.main_alignment = ft.MainAxisAlignment.CENTER
+
+        row_container.width = 650
+        self.page.add(row_container)
+
+        self.page.horizontal_alignment = 'CENTER'
+        self.page.vertical_alignment = 'CENTER'
+
+        self.page.update()
+
+    def back_to_password(self, e: ft.ControlEvent) -> None:
+        #delete the username and the password theye fill at the last page and insert to the database
+        response = self.client.delete(self.username2.value, self.password2.value)
+        # self.massageS2.value = response["response"]
+        self.client = Client()
+        self.page.clean()
+
+        row_container = ft.Row([self.main_panel_signup], auto_scroll=True)
+        row_container.main_alignment = ft.MainAxisAlignment.CENTER
+
+        row_container.width = 650
+        self.page.add(row_container)
+
+        self.page.horizontal_alignment = 'CENTER'
+        self.page.vertical_alignment = 'CENTER'
+
+        self.page.update()
+
 
 
     def go_to_check_email(self, e: ft.ControlEvent) -> None:
@@ -256,12 +306,12 @@ class SignUpPage:
 
         self.page.update()
 
-    def go_to_fill_info(self, e: ft.ControlEvent) -> None:
-        self.page.clean()
-        row = ft.Row([self.main_panel_signup2])
-        self.page.add(row)
-
-        self.page.update()
+    # def go_to_fill_info(self, e: ft.ControlEvent) -> None:
+    #     self.page.clean()
+    #     row = ft.Row([self.main_panel_signup2])
+    #     self.page.add(row)
+    #
+    #     self.page.update()
 
     # to signup
     def click2(self, e: ft.ControlEvent) -> None:
@@ -276,8 +326,11 @@ class SignUpPage:
             self.massageS2.value = response["response"]
 
             if self.massageS2.value == "signup success":
-                row = ft.Row([self.button_fill_info])
+                self.page.clean()
+                row = ft.Row([self.main_panel_signup2])
                 self.page.add(row)
+
+                self.page.update()
 
             self.page.update()
 
@@ -313,8 +366,11 @@ class SignUpPage:
                 self.massageF1.value = response["response"]
 
                 if self.massageF1.value == "the information added":
-                    row = ft.Row([self.button_Next])
-                    self.page.add(row)
+                    self.page.clean()
+                    app_instance = MenuApp(client=self.client)
+                    app_instance.main(self.page)
+                    # row = ft.Row([self.button_Next])
+                    # self.page.add(row)
                 self.page.update()
 
             else:

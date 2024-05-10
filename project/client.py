@@ -2,10 +2,10 @@ import json
 
 import requests
 import sqlite3
-from models import Set, Exercise, Workout
+from project.models import Set, Exercise, Workout
 from datetime import datetime
 
-import api
+import project.api
 
 class Client:
     def __init__(self):
@@ -16,21 +16,6 @@ class Client:
         self.user_exer_lst = []
         self.user_workout_lst = []
 
-    def authenticate(self, name, password):
-        credentials = dict(name=name, password=password)
-
-        response = requests.get(
-            f"{self.server_address}/authenticate",
-            params=credentials
-        )
-
-        self.username = name
-        self.password = password
-        self.first_name = api.find_first_name(self.username)
-        self.user_workout_lst = api.lst_of_workouts_by_username(self.username)
-        self.user_exer_lst = api.lst_of_exercise_names(self.username)
-
-        return response.json()
 
     def authenticate2(self, email, name, password):
         credentials = dict(email=email, name=name, password=password)
@@ -43,11 +28,43 @@ class Client:
         if response.json()["response"] == "user authenticated":
             self.username = name
             self.password = password
-            self.first_name = api.find_first_name(self.username)
-            self.user_workout_lst = api.lst_of_workouts_by_username(self.username)
-            self.user_exer_lst = api.lst_of_exercise_names(self.username)
+            self.first_name = self.find_first_name(userid=self.username)["response"]
+            self.user_workout_lst = self.lst_of_workouts_by_username(userid=self.username)["response"]
+            self.user_exer_lst = self.lst_of_exercise_names(userid=self.username)["response"]
 
         return response.json()
+
+    def find_first_name(self, userid):
+        credentials = dict(userid=userid)
+
+        response1 = requests.get(
+            f"{self.server_address}/find_first_name",
+            params=credentials
+        )
+
+        return response1.json()
+
+    def lst_of_workouts_by_username(self, userid):
+        credentials = dict(userid=userid)
+
+        response1 = requests.get(
+            f"{self.server_address}/lst_of_workouts_by_username",
+            params=credentials
+        )
+
+        return response1.json()
+
+    def lst_of_exercise_names(self, userid):
+        credentials = dict(userid=userid)
+
+        response1 = requests.get(
+            f"{self.server_address}/lst_of_exercise_names",
+            params=credentials
+        )
+
+        return response1.json()
+
+
 
     def check_email(self, email):
         credentials = dict(email=email)
@@ -95,6 +112,15 @@ class Client:
         )
         return response.json()
 
+    def signout(self, name, password):
+        credentials = dict(name=name, password=password)
+
+        response = requests.get(
+            f"{self.server_address}/signout",
+            params=credentials
+        )
+        return response.json()
+
     def addworkout(self, userid, workout_name, date, exerciselist):
         credentials = dict(userid=userid, workout_name=workout_name, date=date, exerciselist=exerciselist)
 
@@ -103,9 +129,10 @@ class Client:
             params=credentials
         )
 
-        self.user_workout_lst = api.lst_of_workouts_by_username(self.username)
+        self.user_workout_lst = self.lst_of_workouts_by_username(self.username)["response"]
 
         return response.json()
+
 
     def deleteworkout(self, userid, workout_name, date):
         credentials = dict(userid=userid, workout_name=workout_name, date=date)
@@ -115,7 +142,7 @@ class Client:
             params=credentials
         )
 
-        self.user_workout_lst = api.lst_of_workouts_by_username(self.username)
+        self.user_workout_lst = self.lst_of_workouts_by_username(self.username)["response"]
 
         return response.json()
 
@@ -131,7 +158,7 @@ class Client:
         exercise2 = json.loads(exercise)
         self.user_exer_lst.append(exercise2["name"])
 
-        self.user_workout_lst = api.lst_of_workouts_by_username(self.username)
+        self.user_workout_lst = self.lst_of_workouts_by_username(self.username)["response"]
 
         return response.json()
 
@@ -153,7 +180,7 @@ class Client:
             params=credentials
         )
 
-        self.user_workout_lst = api.lst_of_workouts_by_username(self.username)
+        self.user_workout_lst = self.lst_of_workouts_by_username(self.username)["response"]
         return response.json()
 
     def addsettoexercise2(self, userid, date, workout_name, exercise_name, power, sets):
@@ -165,7 +192,7 @@ class Client:
             params=credentials
         )
 
-        self.user_workout_lst = api.lst_of_workouts_by_username(self.username)
+        self.user_workout_lst = self.lst_of_workouts_by_username(self.username)["response"]
         return response.json()
 
     def showimprovement(self, userid: str, exercise_name: str, s_date: datetime, e_date: datetime):

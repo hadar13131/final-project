@@ -13,7 +13,7 @@ class Set:
     distance_KM: float = 0.0
 
     @classmethod
-    def load(cls, data: dict[str, int | int | float | float]) -> 'Set':
+    def load(cls, data: dict[str, int | int | float | float]) -> 'Self':
         return cls(repetitions=data["repetitions"], time=data["time"], weight=data["weight"],
                    distance_KM=data["distance_KM"])
 
@@ -29,7 +29,7 @@ class Exercise:
     sets: list[Set]
 
     @classmethod
-    def load(cls, data: dict[str, str | bool | list["sets"]]) -> 'Exercise':
+    def load(cls, data: dict[str, str | bool | list["sets"]]) -> 'Self':
         return cls(name=data["name"], power=data["power"], sets=[Set.load(s) for s in data["sets"]])
 
     def dump(self) -> dict[str, str | list[dict[str, int | bool | int]]]:
@@ -43,7 +43,7 @@ class Workout:
     exercises: list[Exercise]
 
     @classmethod
-    def load(cls, data: dict[str, str | str | list[Exercise]]) -> 'Workout':
+    def load(cls, data: dict[str, str | str | list[Exercise]]) -> 'Self':
         return cls(date=data["date"], workout_name=data["workout_name"], exercises=[Exercise.load(e) for e in data["exercises"]])
 
     def dump(self) -> dict[str, str | list[dict[str, str | list[dict[str, int]]]]]:

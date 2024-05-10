@@ -5,7 +5,7 @@ import hashlib
 from fastapi import FastAPI, HTTPException, Depends
 from sqlalchemy import Table, Column, create_engine, MetaData, String, Boolean, INTEGER, JSON, update, DateTime
 from sqlalchemy.orm.session import sessionmaker
-from models import Set, Exercise
+from project.models import Set, Exercise
 from datetime import datetime
 
 app = FastAPI(docs_url="/")
@@ -49,29 +49,38 @@ md.create_all(engine)
 def hash_password(password: str) -> str:
     return hashlib.sha256(password.encode()).hexdigest()
 
-def lst_of_workouts_by_username(username: str):
+
+@app.get("/lst_of_workouts_by_username")
+def lst_of_workouts_by_username(userid: str) -> dict[str, list[tuple]]:
     session = Session()
     # find = []
-    find = session.query(workout_table).filter(workout_table.c.userid == username).all()
-    # find.append(session.query(workout_table).filter(workout_table.c.userid == username).all())  # filter by userid, get lst of workouts
-    return find
+    find = session.query(workout_table).filter(workout_table.c.userid == userid).all()
+    # return find
+    # return json.dumps(find)
+    return {"response": find}
 
 
-def lst_of_exercise_names(username: str):
+@app.get("/lst_of_exercise_names")
+def lst_of_exercise_names(userid: str):
     session = Session()
-    find = session.query(workout_table).filter(workout_table.c.userid == username).all()  # filter by userid, get lst of workouts
+    find = session.query(workout_table).filter(workout_table.c.userid == userid).all()  # filter by userid, get lst of workouts
     lst = []
     for f in find:
         n = f[4]
         for i in n:
             n2 = json.loads(i)
             lst.append(n2["name"])
-    return lst
+    # return lst
+    return {"response": lst}
 
-def find_first_name(username: str) -> str:
+
+@app.get("/find_first_name")
+def find_first_name(userid: str) -> dict[str, str]:
     session = Session()
-    find = session.query(user_table).filter(user_table.c.name == username).first()
-    return find[2]
+    find = session.query(user_table).filter(user_table.c.name == userid).first()
+    # return {"response": "find_first_name success"}
+    return {"response": str(find[2])}
+    # return find[2]
 
 
 @app.get("/signup")
@@ -141,33 +150,9 @@ def signout(name: str, password: str) -> dict[str, str]:
     for user in users:
         # Check if the username and password match
         if user.name == name and user.password == password_hash:
-            session.execute(
-                user_table.delete().where(
-                    user_table.c.name == name and
-                    user_table.c.password == password_hash
-                )
-            )
+            return {"response": "the details are correct"}
 
-            session.commit()
-
-            return {"response": "sign out success"}
-
-    return {"response": "user data not found"}
-
-    # if (name, password_hash) in users:
-    #     session.execute(
-    #         user_table.delete().where(
-    #             user_table.c.name == name and
-    #             user_table.c.password == password_hash
-    #         )
-    #     )
-    #
-    #     session.commit()
-    #
-    #     return {"response": "signout success"}
-    #
-    # return {"response": "user data not found"}
-
+    return {"response": "the details are not match"}
 
 # end signuout
 
@@ -175,14 +160,6 @@ def signout(name: str, password: str) -> dict[str, str]:
 @app.get("/delete")
 def delete(name: str, password: str) -> dict[str, str]:
     session = Session()
-
-    find = session.query(workout_table).filter(workout_table.c.userid == name).all()
-    for workuot in find:
-        session.execute(
-            workout_table.delete().where(
-                workout_table.c.workoutid == workuot[0]
-            )
-        )
 
     users = session.execute(user_table.select())
 
@@ -200,6 +177,15 @@ def delete(name: str, password: str) -> dict[str, str]:
 
             session.commit()
 
+            find = session.query(workout_table).filter(workout_table.c.userid == name).all()
+            for workuot in find:
+                session.execute(
+                    workout_table.delete().where(
+                        workout_table.c.workoutid == workuot[0]
+                    )
+                )
+
+            session.commit()
             return {"response": "delete success"}
 
     return {"response": "user data not found"}

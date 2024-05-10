@@ -1,29 +1,41 @@
 import flet as ft
 from project.client import Client
-from models import Set, Exercise
+from project.models import Set, Exercise
 import json
 
 import calendar
 from datetime import datetime
-from fl import show_improvement
-from fl import add_workout
-from fl import profile_page
+import show_improvement
+import add_workout
+import profile_page
 
-import fl.login_signup
-import fl.deleteuser_signout
+import login_signup
+import deleteuser_signout
 
 class MenuApp:
     def __init__(self, client: Client) -> None:
         self.page = None
         self.client = client
 
+    def handel_signout_user(self, e=None):
+        self.page.navigation_bar = None
+        self.page.appbar = None
+        self.page.clean()
+        app_instance = deleteuser_signout.SignOutPage(self.client)
+        app_instance.main(self.page)
+        # row_container = ft.Row([app_instance.main_panel_delete])
+        # self.page.add(row_container)
+        # self.page.update()
 
     def handel_delete_user(self, e=None):
+        self.page.navigation_bar = None
+        self.page.appbar = None
         self.page.clean()
-        app_instance = fl.deleteuser_signout.DeleteUserPage(self.client)
-        row_container = ft.Row([app_instance.main_panel_delete])
-        self.page.add(row_container)
-        self.page.update()
+        app_instance = deleteuser_signout.DeleteUserPage(self.client)
+        app_instance.main(self.page)
+        # row_container = ft.Row([app_instance.main_panel_delete])
+        # self.page.add(row_container)
+        # self.page.update()
 
     def handle_home_click(self, e=None):
         self.show_home_page()
@@ -86,21 +98,13 @@ class MenuApp:
             bgcolor=ft.colors.SURFACE_VARIANT,
             actions=[
                 ft.IconButton(ft.icons.HOME, on_click=self.handle_home_click),
-                # ft.ElevatedButton(text="sign out", on_click=self.handel_delete_user, bgcolor='#8532B8',
-                #                   color='white'),
-                ft.ElevatedButton(text="delete my user", on_click=self.handel_delete_user, bgcolor='#8532B8',
-                                  color='white'),
-
-                # ft.Text("HELLO " + self.client.first_name),
                 ft.Text(""),
                 ft.Text(datetime.now().strftime("%x")),
                 ft.PopupMenuButton(
                     items=[
-                        ft.PopupMenuItem(text="Item 1"),
+                        ft.PopupMenuItem(text="delete my user", on_click=self.handel_delete_user),
                         ft.PopupMenuItem(),  # divider
-                        # ft.PopupMenuItem(
-                        #     text="Checked item", checked=False, on_click=check_item_clicked
-                        # ),
+                        ft.PopupMenuItem(text="sign out", on_click=self.handel_signout_user),
                     ]
                 ),
             ],

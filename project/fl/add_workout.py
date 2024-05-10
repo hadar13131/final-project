@@ -27,27 +27,74 @@ class AddFullWorkout:
 
         self.massage2 = ft.TextField(read_only=True, border="none", color='#A8468C')
 
-        self.first_panel = ft.Column(
-            [
-                ft.Text("ADD NEW WORKOUT:", size=55, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True,
-                        font_family="Arial Rounded MT Bold"),
-                ft.Text("ADD THE NAME OF YOUR WORKOUT:", size=25, color='#8532B8', weight=ft.FontWeight.W_500,
-                        selectable=True,
-                        font_family="Arial Rounded MT Bold"),
-                self.workout_name,
-                ft.Row(
-                    [
-                        ft.Text("THE DATE IS- " + self.str_date, size=25, color='#8532B8', weight=ft.FontWeight.W_500,
-                                selectable=True, font_family="Arial Rounded MT Bold"),
+
+        self.first_panel = ft.Column([
+            ft.Container(
+            margin=10,
+            padding=10,
+            alignment=ft.alignment.center,
+            content=ft.Row(
+                controls=[
+                    ft.Column(
+                        [
+                            ft.Text("ADD NEW WORKOUT-", size=55, color='#8532B8', weight=ft.FontWeight.W_500,
+                                    selectable=True,
+                                    font_family="Century Gothic"),
+                            ft.Row(
+                                [
+                                    ft.Text("THE DATE IS- " + self.str_date, size=25, color='#0A54B6',
+                                            weight=ft.FontWeight.W_500,
+                                            selectable=True, font_family="Century Gothic"),
+                                ]
+                            )
+                        ]
+                    )
+                ]
+            )
+        ),
+            ft.Container(
+                margin=10,
+                padding=10,
+                alignment=ft.alignment.center,
+                bgcolor='#CC99FF',
+                border_radius=10,
+                border=ft.border.all(3, '#8532B8'),
+                content=ft.Row(
+                    controls=[
+                        ft.Column(
+                            [
+
+                                ft.Text("ADD THE NAME OF YOUR WORKOUT-", size=25, color='#8532B8',
+                                        weight=ft.FontWeight.W_500,
+                                        selectable=True,
+                                        font_family="Century Gothic"),
+                                self.workout_name,
+
+                            ]
+                        )
                     ]
-                ),
-                ft.Text("CONTINUE TO ADD NEW EXERCISE-", size=35, color='#8532B8', weight=ft.FontWeight.W_500,
-                        selectable=True,
-                        font_family="Arial Rounded MT Bold"),
-                self.add_workout_button,
-                self.massage2
-            ]
-        )
+                )
+            ),
+            ft.Container(
+                margin=10,
+                padding=10,
+                alignment=ft.alignment.center,
+                content=ft.Row(
+                    controls=[
+                        ft.Column(
+                            [
+                                ft.Text("CONTINUE TO ADD NEW EXERCISE-", size=35, color='#8532B8',
+                                        weight=ft.FontWeight.W_500,
+                                        selectable=True,
+                                        font_family="Century Gothic"),
+                                self.add_workout_button,
+                                self.massage2
+                            ]
+                        )
+                    ]
+                )
+            )
+        ])
 
         self.delete_workout = ft.ElevatedButton(text="delete workout", on_click=self.delete_workout,
                                                  bgcolor='#8532B8', color='white')
@@ -69,17 +116,6 @@ class AddFullWorkout:
 
         self.button_add_exercise = ft.ElevatedButton(text="add exercise", on_click=self.show_exercise_format,
                                                  bgcolor='#8532B8', color='white')
-
-        self.exercise_info1 = ft.Column([
-            ft.Text("ADD NEW EXERCISE- ", size=30, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True,
-                    font_family="Arial Rounded MT Bold"),
-            self.exercise_name,
-            ft.Text("THE EXERCISE IS POWER? ", size=20, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True,
-                    font_family="Arial Rounded MT Bold"),
-            self.power1,
-            self.add_exercise_button,
-            self.addexerciseM
-        ])
 
         self.exercise_info = ft.Row([ft.Container(
             margin=10,
@@ -175,24 +211,31 @@ class AddFullWorkout:
             margin=10,
             padding=10,
             alignment=ft.alignment.center,
-            bgcolor='#CC99FF',
-            border_radius=10,
-            border=ft.border.all(3, '#8532B8'),
             content=ft.Row(
                 controls=[
-                    ft.Column(
+                    ft.Row(
                         [
-                            ft.Text("Workout name- " + workout_name, size=20, color=ft.colors.BLACK,
-                                    weight=ft.FontWeight.W_500, selectable=True, font_family="Arial Rounded MT Bold",
-                                    text_align=ft.alignment.center),
+                            ft.Column([
+                                ft.Text("WORKOUT DETAILS ", size=35, color="#242F9C",
+                                        weight=ft.FontWeight.W_500, selectable=True,
+                                        font_family="Arial Rounded MT Bold",
+                                        text_align=ft.alignment.center),
 
-                            ft.Text("Workout date- " + workout_date, size=20, color=ft.colors.BLACK,
-                                    weight=ft.FontWeight.W_500, selectable=True, font_family="Arial Rounded MT Bold",
-                                    text_align=ft.alignment.center),
+                                ft.Text("Workout name- " + workout_name, size=20, color="#0070C0",
+                                        weight=ft.FontWeight.W_500, selectable=True,
+                                        font_family="Arial Rounded MT Bold",
+                                        text_align=ft.alignment.center),
 
-                            self.delete_workout
+                                ft.Text("Workout date- " + workout_date, size=20, color="#0070C0",
+                                        weight=ft.FontWeight.W_500, selectable=True,
+                                        font_family="Arial Rounded MT Bold",
+                                        text_align=ft.alignment.center),
 
-                            # ft.Column(self.show_exercise())
+                                self.delete_workout
+
+                                # ft.Column(self.show_exercise())
+                            ])
+
                         ]
                     )
                 ]
@@ -212,9 +255,15 @@ class AddFullWorkout:
                 self.massage2.value = response["response"]
                 self.page.update()
                 self.page.clean()
-                self.page.add(self.show_workout_details(workout_name=workout_name, workout_date=self.str_date))
-                self.page.add(self.button_add_exercise)
+
+                row1 = self.show_workout_details(workout_name=workout_name, workout_date=self.str_date)
+                self.page.add(row1)
+
+                self.page.add(ft.Row([self.button_add_exercise]))
+
                 self.fill_exercise()
+
+                self.page.update()
 
             else:
                 self.massage2.value = "this workout is exist, please choose other name"
@@ -235,7 +284,7 @@ class AddFullWorkout:
         self.power1.value = ""
         self.addexerciseM.value = ""
         self.page.add(self.show_workout_details(workout_name=self.workout_name.value, workout_date=self.str_date))
-        self.page.add(self.button_add_exercise)
+        self.page.add(ft.Row([self.button_add_exercise]))
         self.page.add(ft.Row([self.exercise_info]))
         self.page.update()
 
@@ -258,7 +307,7 @@ class AddFullWorkout:
                 self.addexerciseM.value = response2["response"]
                 self.page.clean()
                 self.page.add(self.show_workout_details(workout_name=self.workout_name.value, workout_date=self.str_date))
-                self.page.add(self.button_add_exercise)
+                self.page.add(ft.Row([self.button_add_exercise]))
                 self.page.add(ft.Row([self.exercise_info, self.set_info]))
                 self.addsetM.value = ""
                 self.page.update()
@@ -334,14 +383,25 @@ class AddFullWorkout:
         self.distance_KMS1.value = ""
         self.addsetM.value = ""
         self.page.add(self.show_workout_details(workout_name=self.workout_name.value, workout_date=self.str_date))
-        self.page.add(self.button_add_exercise)
+        self.page.add(ft.Row([self.button_add_exercise]))
         self.page.add(ft.Row([self.exercise_info, self.set_info]))
         self.page.update()
 
     def main(self, page: ft.Page) -> None:
         self.page = page
         self.page.scroll = ft.ScrollMode.ALWAYS
-        self.page.add(ft.Column([self.first_panel]))
+
+        row_container = self.first_panel
+        row_container.main_alignment = ft.MainAxisAlignment.CENTER
+
+        row_container.width = 600
+        self.page.add(row_container)
+
+        self.page.horizontal_alignment = 'CENTER'
+        self.page.vertical_alignment = 'CENTER'
+
+        self.page.bgcolor = "#E7CDFF"
+        # self.page.add(ft.Column([self.first_panel]))
         self.page.update()
 
 
@@ -362,10 +422,6 @@ class ShowTheWorkout:
         self.workout_lst = self.client.user_workout_lst
         self.date = datetime.strptime(date, "%B %d, %Y")
 
-        self.text1 = ft.Text("add workout:", size=35, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True,
-                             font_family="Elephant")
-        # self.userid1 = ft.TextField(label="userid", autofocus=True, border_color='#8532B8')
-
         self.workout_name = ft.TextField(label="name of workout", autofocus=True, border_color='#8532B8')
         self.massage = ft.TextField(read_only=True, border="none", color='#A8468C')
 
@@ -378,7 +434,8 @@ class ShowTheWorkout:
     def date_workout(self):
         lst = []
         for index in range(len(self.workout_lst)):
-            if self.date == self.workout_lst[index][3]:
+            date1 = datetime.strptime(self.workout_lst[index][3], '%Y-%m-%dT%H:%M:%S')
+            if self.date == date1:
                 lst.append(self.workout_lst[index])
 
         return lst
@@ -567,22 +624,6 @@ class ShowTheWorkout:
         ]))
 
         self.page.update()
-
-
-        # self.calndar_veiw = ft.Row([
-        #     ft.Container(
-        #         height=500,
-        #         border=ft.border.all(1, ft.colors.BLACK),
-        #         border_radius=10,
-        #         clip_behavior=ft.ClipBehavior.HARD_EDGE,
-        #         content=grid,
-        #     ),
-        #     ft.Divider(color="transparent", height=20),
-        #     task_manager,
-        #     self.massage
-        # ])
-        #
-        # return self.calndar_veiw
 
 
     def main(self, page: ft.Page) -> None:
@@ -797,9 +838,10 @@ class CalendarApp:
                     if day != 0:
                         event = False
                         for index in range(len(self.client.user_workout_lst)):
-                            if day == int(self.client.user_workout_lst[index][3].strftime("%d")):
-                                if int(self.client.user_workout_lst[index][3].strftime("%m")) == month:
-                                    if int(self.client.user_workout_lst[index][3].strftime("%Y")) == year:
+                            date_obj = datetime.strptime(self.client.user_workout_lst[index][3], '%Y-%m-%dT%H:%M:%S')
+                            if day == int(date_obj.strftime("%d")):
+                                if int(date_obj.strftime("%m")) == month:
+                                    if int(date_obj.strftime("%Y")) == year:
                                         event = True
 
                         row.controls.append(

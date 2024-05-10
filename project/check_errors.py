@@ -2,6 +2,8 @@ from project.client import Client
 import json
 import re
 
+from datetime import datetime
+
 def is_numeric(value):
     if isinstance(value, (int, float)):
         return True
@@ -19,7 +21,7 @@ def check_workoutname(client: Client, workout_name, date) -> bool:
     workoutlst = client.user_workout_lst
 
     for i in workoutlst:
-        date1 = i[3]
+        date1 = datetime.strptime(i[3], '%Y-%m-%dT%H:%M:%S')
         if date1 == date:
             if i[2] == workout_name:
                 return False
@@ -30,10 +32,13 @@ def check_workoutname(client: Client, workout_name, date) -> bool:
 def check_exercisename(client: Client, workout_name, date, exercise_name) -> bool:
     workoutlst = client.user_workout_lst
 
+    if not workoutlst:
+        return True
+
     w = workoutlst[0]
 
     for i in workoutlst:
-        date1 = i[3]
+        date1 = datetime.strptime(i[3], '%Y-%m-%dT%H:%M:%S')
         if date1 == date:
             if i[2] == workout_name:
                 w = i

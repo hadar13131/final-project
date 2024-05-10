@@ -156,15 +156,12 @@ class ShowImproveGraps:
                 self.avgweight_l = response["weight_avg"]
                 self.avgdistance_KM_l = response["distance_KM_avg"]
 
+                if not self.dates_l:
+                    self.errorM.value = f"there is no {self.exercise_name2} exercise between the days you picked"
+                    self.page.update()
 
-
-                # chart1 = self.bring_graph1(exercise_name=exercise_name, s_date=s_date, e_date=e_date, lst=self.avgrepete_l, date_lst=self.dates_l)
-                #
-                # self.page.add(ft.Row([ft.Text("AVG OF THE EXERCISE- " + self.exercise_name.value, size=30, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True,
-                #              font_family="Elephant"), chart1]))
-                # self.page.update()
-
-                self.show_graph1(exercise_name=self.exercise_name2, s_date=s_date, e_date=e_date)
+                else:
+                    self.show_graph1(exercise_name=self.exercise_name2, s_date=s_date, e_date=e_date)
 
 
         else:
