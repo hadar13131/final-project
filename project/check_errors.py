@@ -78,3 +78,22 @@ def is_valid_phone_number(phone_number: str) -> bool:
         return False
 
 
+def str_is_int(value):
+    if isinstance(value, int):
+        return True
+
+    # elif value == "":
+    #     return True
+
+    elif isinstance(value, str):
+        return value.isdigit()
+
+    else:
+        return False
+
+def check_int_type(value):
+    return isinstance(value, int)
+
+def check_float_type(value):
+    return isinstance(value, float)
+

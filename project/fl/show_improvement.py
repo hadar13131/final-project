@@ -419,23 +419,24 @@ class ShowImproveGraps:
         chart_of_params = self.bring_graph2(exercise_name=exercise_name1, s_date=s_date, e_date=e_date, lst=lst,
                                             date_lst=date_lst)
 
-        view1 = ft.Column(
-            controls=[
 
-                ft.Row(
-                    controls=[
-                        ft.Text(f"THE GRAPH SHOW THE IMPROVEMENT OF {name_param} "
-                                f" YOU DID IN THE TIME YOU CHOSE", size=20, color=ft.colors.BLACK,
-                                weight=ft.FontWeight.W_100,
-                                selectable=True, font_family="Century Gothic", text_align=ft.alignment.center),
-                    ],
-                ),
-                chart_of_params,
-
-                ft.Row([])
-
-            ]
-        )
+        # view1 = ft.Column(
+        #     controls=[
+        #
+        #         ft.Row(
+        #             controls=[
+        #                 ft.Text(f"THE GRAPH SHOW THE IMPROVEMENT OF {name_param} "
+        #                         f" YOU DID IN THE TIME YOU CHOSE", size=20, color=ft.colors.BLACK,
+        #                         weight=ft.FontWeight.W_100,
+        #                         selectable=True, font_family="Century Gothic", text_align=ft.alignment.center),
+        #             ],
+        #         ),
+        #         chart_of_params,
+        #
+        #         ft.Row([])
+        #
+        #     ]
+        # )
 
         self.page.add(ft.Text(f"THE GRAPH SHOW THE IMPROVEMENT OF {name_param} "
                                 f" YOU DID IN THE TIME YOU CHOSE", size=20, color=ft.colors.BLACK,
@@ -467,6 +468,9 @@ class ShowImproveGraps:
         self.e_date = e_date
         self.lst = lst
         self.date_lst = date_lst
+
+        # if len(date_lst) == 0:
+        #     return 0
 
         new_lst = []
         left_axis1 = []

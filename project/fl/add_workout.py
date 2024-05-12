@@ -148,7 +148,7 @@ class AddFullWorkout:
 
         self.text2 = ft.Text("add a set:")
         self.repetitionsS1 = ft.TextField(label="repetitions", autofocus=True, border_color='#8532B8')
-        self.timeS1 = ft.TextField(label="time (hours)", autofocus=True, border_color='#8532B8')
+        self.timeS1 = ft.TextField(label="time (minutes)", autofocus=True, border_color='#8532B8')
         self.weightS1 = ft.TextField(label="weight (Kg)", autofocus=True, border_color='#8532B8')
         self.distance_KMS1 = ft.TextField(label="distance (KM)", autofocus=True, border_color='#8532B8')
 
@@ -353,26 +353,35 @@ class AddFullWorkout:
         if distance_KMS1 == "":
             distance_KMS1 = 0
 
-        if (c_e.is_numeric(repetitionsS1) and c_e.is_numeric(timeS1) and c_e.is_numeric(weightS1)
-                and c_e.is_numeric(distance_KMS1)):
-            sets2 = Set(repetitions=repetitionsS1, time=timeS1, weight=weightS1, distance_KM=distance_KMS1)
+        if not c_e.str_is_int(repetitionsS1):
+            self.addsetM.value = "the repetitions should be in full"
+            self.page.update()
 
-            response = self.client.addsettoexercise2(userid=username, date=str(self.date),
-                                                     workout_name=self.workout_name.value,
-                                                     exercise_name=self.exercise_name.value,
-                                                     power=self.power1.value, sets=json.dumps(sets2.dump()))
-
-            self.addsetM.value = response["response"]
-
-            self.repetitionsS1.value = ""
-            self.timeS1.value = ""
-            self.weightS1.value = ""
-            self.distance_KMS1.value = ""
+        elif not c_e.str_is_int(timeS1):
+            self.addsetM.value = "the time should be in minutes"
             self.page.update()
 
         else:
-            self.addsetM.value = "please enter only numbers!"
-            self.page.update()
+            if (c_e.is_numeric(repetitionsS1) and c_e.is_numeric(timeS1) and c_e.is_numeric(weightS1)
+                    and c_e.is_numeric(distance_KMS1)):
+                sets2 = Set(repetitions=repetitionsS1, time=timeS1, weight=weightS1, distance_KM=distance_KMS1)
+
+                response = self.client.addsettoexercise2(userid=username, date=str(self.date),
+                                                         workout_name=self.workout_name.value,
+                                                         exercise_name=self.exercise_name.value,
+                                                         power=self.power1.value, sets=json.dumps(sets2.dump()))
+
+                self.addsetM.value = response["response"]
+
+                self.repetitionsS1.value = ""
+                self.timeS1.value = ""
+                self.weightS1.value = ""
+                self.distance_KMS1.value = ""
+                self.page.update()
+
+            else:
+                self.addsetM.value = "please enter only numbers!"
+                self.page.update()
 
 
     def show_set_format(self, e: ft.ControlEvent):

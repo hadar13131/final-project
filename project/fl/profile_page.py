@@ -93,7 +93,7 @@ class Profile_Page:
         self.count_workouts = ft.Column(
             alignment=ft.alignment.top_center,
             controls=[
-                ft.Column([
+                ft.Row([
                     ft.Text("WORKOUT COUNTER", size=30, color='#8532B8', weight=ft.FontWeight.W_500,
                             selectable=True, font_family="Elephant", text_align=ft.alignment.center)
                 ]),
@@ -138,17 +138,17 @@ class Profile_Page:
                             #             weight=ft.FontWeight.W_500,
                             #             selectable=True, font_family="Arial Rounded MT Bold"),
                             # ]),
+                            self.workout_table
+                            # ft.Column([
+                            #
+                            #         # scroll=ft.ScrollMode.ALWAYS,
+                            #         self.workout_table
+                            #     # ft.ElevatedButton(text="change details", on_click=self.change_your_info,
+                            #     #                   bgcolor='#8532B8',
+                            #     #                   color='white'),
+                            # ]
 
-                            ft.Column([
-
-                                    # scroll=ft.ScrollMode.ALWAYS,
-                                    self.workout_table
-                                # ft.ElevatedButton(text="change details", on_click=self.change_your_info,
-                                #                   bgcolor='#8532B8',
-                                #                   color='white'),
-                            ]
-
-                            ),
+                            # ),
 
                         ]
                     )
@@ -180,15 +180,15 @@ class Profile_Page:
                          ft.Container(
                              margin=10,
                              padding=10,
-                             alignment=ft.alignment.top_center,
+                             alignment=ft.alignment.top_left,
                              bgcolor='#CC99FF',
                              border_radius=10,
                              border=ft.border.all(3, '#8532B8'),
-                             content=ft.Column(
-                                 width=600,
+                             content=ft.Row(
+                                 # width=600,
                                  controls=[
                                      ft.Column(scroll=ft.ScrollMode.ALWAYS,
-                                            height=1000,
+                                            height=400,
                                                controls=[
                                              ft.Row([
                                                  ft.Text("YOUR WORKOUTS PLAN:", size=20, color='#8532B8',
@@ -200,14 +200,16 @@ class Profile_Page:
                                                  self.table1
                                              ]),
 
-                                     ])
+                                     ]),
+
+
 
                                  ],
                              ))
                      ])
 
         self.veiw3 = ft.Column(
-                    alignment=ft.alignment.top_center,
+                    alignment=ft.MainAxisAlignment.START,
                     controls=[ft.Container(
                              margin=10,
                              padding=10,
@@ -216,10 +218,10 @@ class Profile_Page:
                              # border_radius=10,
                              # border=ft.border.all(3, '#8532B8'),
                              content=ft.Column(
-                                 alignment=ft.alignment.top_right,
                                  controls=[
-                                     ft.Row(
-                                         # alignment=ft.MainAxisAlignment.CENTER,
+                                     ft.Column(
+                                         height=400,
+                                         alignment=ft.MainAxisAlignment.START,
                                          controls=[
                                          self.count_workouts
                                  ],
@@ -227,6 +229,19 @@ class Profile_Page:
                      ])
 
                         )])
+
+        # self.veiw3 = ft.Container(
+        #         margin=10,
+        #         padding=10,
+        #         # alignment=ft.alignment.center,
+        #         # bgcolor='#CC99FF',
+        #         # border_radius=10,
+        #         # border=ft.border.all(3, '#8532B8'),
+        #         content=self.count_workouts,
+        #             alignment=ft.alignment.top_right
+        #
+        #
+        #     )
 
     def button_count(self, value: str):
         button = ft.FilledButton(
@@ -444,8 +459,9 @@ class Profile_Page:
         self.page.add(row_container)
 
         self.page.add(ft.Row(
-            alignment=ft.alignment.top_center,
-            controls=[self.view2,self.veiw3]))
+            alignment=ft.MainAxisAlignment.CENTER,
+            controls=[ft.Row([self.view2, self.veiw3])]))
+
         self.page.bgcolor = "#E7CDFF"
         self.page.update()
 
