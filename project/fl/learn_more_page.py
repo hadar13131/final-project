@@ -24,6 +24,26 @@ class LearnMorePage:
             ]
         )
 
+        self.learn_more_panel = ft.Column(
+            # width=600,
+            controls=[
+                ft.Container(
+                    margin=10,
+                    padding=10,
+                    alignment=ft.alignment.center,
+                    bgcolor='#CC99FF',
+                    content=ft.Column(
+                        [
+                            self.text1,
+                            self.m1,
+                            self.m2,
+                            self.button_Back
+                        ]
+                    )
+                )
+            ],
+        )
+
     def back_to_welcome(self, e: ft.ControlEvent) -> None:
         self.page.clean()
         app_instance = welcome_page.First_page()
@@ -46,7 +66,7 @@ class LearnMorePage:
 
 
 def main() -> None:
-    ft.app(target=HomePage.main)
+    ft.app(target=LearnMorePage.main)
 
 
 if __name__ == "__main__":

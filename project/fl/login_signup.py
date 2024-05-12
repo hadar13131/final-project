@@ -27,26 +27,51 @@ class LoginPage:
         self.username1 = ft.TextField(label="User Name", autofocus=True, border_color='#8532B8')
         self.password1 = ft.TextField(label="Password", autofocus=True, password=True, can_reveal_password=True,
                                       border_color='#8532B8')
-        self.button1 = ft.ElevatedButton(text="Login", on_click=self.click1, bgcolor='#8532B8', color='white')
+        self.button1 = ft.ElevatedButton(text="Login", on_click=self.click1, bgcolor='#E1F3F1', color='black')
         self.massageL1 = ft.TextField(read_only=True, border="none", color='#A8468C')
 
-        self.button_Next = ft.ElevatedButton(text="continue", on_click=self.go_to_menu, bgcolor='#8532B8',
-                                             color='white')
+        self.button_Next = ft.ElevatedButton(text="continue", on_click=self.go_to_menu, bgcolor='#E1F3F1',
+                                             color='black')
 
-        self.button_Back = ft.ElevatedButton(text="BACK", on_click=self.back_to_welcome, bgcolor='#8532B8',
-                                             color='white')
+        self.button_Back = ft.ElevatedButton(text="BACK", on_click=self.back_to_welcome, bgcolor='#CC99FF', color='black')
+
 
         self.main_panel_login = ft.Column(
-            [
-                self.text1,
-                self.text2,
-                self.email1,
-                self.username1,
-                self.password1,
-                self.button1,
-                self.massageL1,
-                self.button_Back
-            ])
+            alignment=ft.alignment.top_left,
+            controls=[
+                self.button_Back,
+                ft.Container(
+                    margin=20,
+                    padding=20,
+                    # height=10,
+                    # width=10,
+                    alignment=ft.alignment.center,
+                    bgcolor=ft.colors.WHITE,
+                    border_radius=10,
+                    border=ft.border.all(30, '#E1F3F1'),
+                    content=ft.Column(
+                        [
+
+                            ft.Text("WELCOME BACK!", size=55, color=ft.colors.BLACK, weight=ft.FontWeight.W_500,
+                                    selectable=True, font_family="Century Gothic"),
+
+                                        ft.Text("login-", size=30, color=ft.colors.BLACK, weight=ft.FontWeight.W_500,
+                                                selectable=True,
+                                                font_family="Century Gothic"),
+                                        self.email1,
+                                        self.username1,
+                                        self.password1,
+                                        self.button1,
+                                        self.massageL1
+                                    ]
+                                )
+                            )
+
+                        ]
+                    )
+
+
+
 
     def back_to_welcome(self, e: ft.ControlEvent) -> None:
         self.page.clean()
@@ -132,6 +157,7 @@ class LoginPage:
 
         self.page.horizontal_alignment = 'CENTER'
         self.page.vertical_alignment = 'CENTER'
+        self.page.bgcolor = "#DEE5FE"
 
         self.page.update()
 
@@ -148,25 +174,26 @@ class SignUpPage:
         self.page = None
         self.client = Client()
 
-        self.button_Back = ft.ElevatedButton(text="BACK", on_click=self.back_to_welcome, bgcolor='#8532B8',
-                                             color='white')
+        self.button_Back = ft.ElevatedButton(text="BACK", on_click=self.back_to_welcome, bgcolor='#CC99FF', color='black')
 
         self.button_Back_to_email = ft.ElevatedButton(text="BACK TO EMAIL", on_click=self.back_to_email,
-                                                      bgcolor='#8532B8', color='white')
+                                                      bgcolor='#CC99FF', color='black')
 
-        self.button_Back_to_password = ft.ElevatedButton(text="BACK TO EMAIL", on_click=self.back_to_password,
-                                                      bgcolor='#8532B8', color='white')
+        self.button_Back_to_password = ft.ElevatedButton(text="BACK", on_click=self.back_to_password,
+                                                      bgcolor='#CC99FF', color='black')
 
-        self.text2 = ft.Text("sign up", size=55, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True,
-                             font_family="Elephant")
+        self.button_go_to_login = ft.ElevatedButton(text="go to login", on_click=self.go_to_login,
+                                                         bgcolor='#CC99FF', color='black')
+
+
         self.username2 = ft.TextField(label="User Name", autofocus=True, border_color='#8532B8')
         self.password2 = ft.TextField(label="Password", autofocus=True, password=True, can_reveal_password=True,
                                       border_color='#8532B8')
-        self.button2 = ft.ElevatedButton(text="Sign Up", on_click=self.click2, bgcolor='#8532B8', color='white')
+
+        self.button2 = ft.ElevatedButton(text="Sign Up", on_click=self.click2, bgcolor='#E1F3F1', color='black')
         self.massageS2 = ft.TextField(read_only=True, border="none", color='#A8468C')
 
-        self.text_info_title = ft.Text("Enter your info", size=55, color='#8532B8', weight=ft.FontWeight.W_500,
-                                       selectable=True, font_family="Elephant")
+
         self.firstname2 = ft.TextField(label="first name", autofocus=True, border_color='#8532B8')
         self.lastname2 = ft.TextField(label="last name", autofocus=True, border_color='#8532B8')
         self.phone_number = ft.TextField(label="phone number", autofocus=True, border_color='#8532B8')
@@ -186,66 +213,115 @@ class SignUpPage:
 
         self.goals = ft.TextField(label="goals", autofocus=True, border_color='#8532B8')
 
-        self.button_send_info = ft.ElevatedButton(text="Send", on_click=self.click_info, bgcolor='#8532B8',
-                                                  color='white')
+        self.button_send_info = ft.ElevatedButton(text="Send", on_click=self.click_info, bgcolor='#E1F3F1', color='black')
         self.massageF1 = ft.TextField(read_only=True, border="none", color='#A8468C')
 
         self.button_Next = ft.ElevatedButton(text="continue", on_click=self.go_to_menu, bgcolor='#8532B8',
                                              color='white')
 
 
-
         self.email_panel = ft.Column(
-            [
-                ft.Text("sign up", size=55, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True,
-                        font_family="Elephant"),
-                ft.Text("WE HAPPY YOU DECIDED TO ENJOY US", size=55, color='#8532B8', weight=ft.FontWeight.W_500,
-                        selectable=True, font_family="Elephant"),
-                ft.Text("First, enter your email", size=55, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True,
-                        font_family="Elephant"),
-                self.email,
-                self.massageE,
-                ft.ElevatedButton(text="check email", on_click=self.go_to_check_email, bgcolor='#8532B8', color='white'),
-                self.button_Back
+            alignment=ft.alignment.top_left,
+            controls=[
+                self.button_Back,
+                ft.Container(
+                    margin=20,
+                    padding=20,
+                    # height=10,
+                    # width=10,
+                    # alignment=ft.alignment.center,
+                    bgcolor=ft.colors.WHITE,
+                    border_radius=10,
+                    border=ft.border.all(30, '#E1F3F1'),
+                    content=ft.Column(
+                        [
+                            ft.Text("sign up", size=30, color='black', weight=ft.FontWeight.W_500, selectable=True,
+                                    font_family="Century Gothic"),
+
+                            ft.Text("First, enter your email", size=20, color='black', weight=ft.FontWeight.W_500,
+                                    selectable=True,
+                                    font_family="Century Gothic"),
+                            self.email,
+                            self.massageE,
+                            ft.ElevatedButton(text="check email", on_click=self.go_to_check_email, bgcolor='#E1F3F1',
+                                              color='black'),
+                        ]
+                    )
+                )
+
             ]
         )
 
+
         self.main_panel_signup = ft.Column(
-            [
-                self.text2,
-                self.username2,
-                self.password2,
-                self.button2,
-                self.massageS2,
-                self.button_Back_to_email
+            alignment=ft.alignment.top_left,
+            controls=[
+                self.button_Back_to_email,
+                ft.Container(
+                    margin=20,
+                    padding=20,
+                    # height=10,
+                    # width=10,
+                    alignment=ft.alignment.center,
+                    bgcolor=ft.colors.WHITE,
+                    border_radius=10,
+                    border=ft.border.all(30, '#E1F3F1'),
+                    content=ft.Column(
+                        [
+
+                            ft.Text("sign up", size=55, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True,
+                                    font_family="Elephant"),
+                            self.username2,
+                            self.password2,
+                            self.button2,
+                            self.massageS2,
+
+                        ]
+                    )
+                )
+
             ]
         )
 
 
         self.main_panel_signup2 = ft.Column(
-            [
+            alignment=ft.alignment.top_left,
+            controls=[
                 self.button_Back_to_password,
-                self.text_info_title,
-                self.firstname2,
-                self.lastname2,
-                self.phone_number,
-                # self.email,
-                self.age,
-                self.gender,
-                self.goals,
-                self.button_send_info,
-                self.massageF1
-                # self.button_Next
+                ft.Container(
+                    margin=20,
+                    padding=20,
+                    # height=10,
+                    # width=10,
+                    alignment=ft.alignment.center,
+                    bgcolor=ft.colors.WHITE,
+                    border_radius=10,
+                    border=ft.border.all(30, '#E1F3F1'),
+                    content=ft.Column(
+                        [
+                            ft.Text("Enter your details", size=55, color=ft.colors.BLACK, weight=ft.FontWeight.W_500,
+                                    selectable=True, font_family="Century Gothic"),
+                            self.firstname2,
+                            self.lastname2,
+                            self.phone_number,
+                            # self.email,
+                            self.age,
+                            self.gender,
+                            self.goals,
+                            self.button_send_info,
+                            self.massageF1
+
+                        ]
+                    )
+                )
+
             ]
-            # ,
-            # scroll=ft.ScrollMode.ALWAYS,
-            # height=100
         )
 
-        self.main_panel_bottom = ft.Column(
-            [
-                self.button_Next
-            ])
+    def go_to_login(self, e: ft.ControlEvent):
+        self.page.clean()
+        app_instance = LoginPage()
+        app_instance.main(self.page)
 
 
     def back_to_welcome(self, e: ft.ControlEvent) -> None:
@@ -296,8 +372,20 @@ class SignUpPage:
                 if self.massageE.value == "the email is valid":
 
                     self.page.clean()
-                    row = ft.Row([self.main_panel_signup])
-                    self.page.add(row)
+                    row_container = ft.Row([self.main_panel_signup], auto_scroll=True)
+                    row_container.main_alignment = ft.MainAxisAlignment.CENTER
+
+                    row_container.width = 650
+                    self.page.add(row_container)
+
+                    self.page.horizontal_alignment = 'CENTER'
+                    self.page.vertical_alignment = 'CENTER'
+                    self.page.update()
+
+                else:
+                    self.page.add(self.button_go_to_login)
+                    self.page.update()
+
             else:
                 self.massageE.value = "the email is not write correctly"
 
@@ -327,9 +415,14 @@ class SignUpPage:
 
             if self.massageS2.value == "signup success":
                 self.page.clean()
-                row = ft.Row([self.main_panel_signup2])
-                self.page.add(row)
+                row_container = ft.Row([self.main_panel_signup2], auto_scroll=True)
+                row_container.main_alignment = ft.MainAxisAlignment.CENTER
 
+                row_container.width = 650
+                self.page.add(row_container)
+
+                self.page.horizontal_alignment = 'CENTER'
+                self.page.vertical_alignment = 'CENTER'
                 self.page.update()
 
             self.page.update()
@@ -397,6 +490,7 @@ class SignUpPage:
 
         self.page.horizontal_alignment = 'CENTER'
         self.page.vertical_alignment = 'CENTER'
+        self.page.bgcolor = "#DEE5FE"
 
         self.page.update()
 

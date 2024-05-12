@@ -8,6 +8,7 @@ import calendar
 from datetime import datetime
 from project.client import Client
 
+
 class ShowImproveGraps:
     def __init__(self, client: Client):
         self.page = None
@@ -15,7 +16,8 @@ class ShowImproveGraps:
 
         self.exercises_name_lst = self.client.user_exer_lst
 
-        self.exercise_name = ft.TextField(label="exercise name", label_style=ft.TextStyle(color=ft.colors.BLACK), autofocus=True, border_color=ft.colors.WHITE)
+        self.exercise_name = ft.TextField(label="exercise name", label_style=ft.TextStyle(color=ft.colors.BLACK),
+                                          autofocus=True, border_color=ft.colors.WHITE)
         # self.search = ft.SearchBar(
         #
         # )
@@ -28,7 +30,8 @@ class ShowImproveGraps:
         self.day2 = ft.TextField(label="day", autofocus=True, border_color='#8532B8')
         self.month2 = ft.TextField(label="month", autofocus=True, border_color='#8532B8')
         self.year2 = ft.TextField(label="year", autofocus=True, border_color='#8532B8')
-        self.button1 = ft.ElevatedButton(text="send", on_click=self.show_graph1_on_click, bgcolor='#8532B8', color='white')
+        self.button1 = ft.ElevatedButton(text="send", on_click=self.show_graph1_on_click, bgcolor='#8532B8',
+                                         color='white')
 
         self.massageD1 = ft.TextField(read_only=True, border="none", color=ft.colors.BLACK)
         self.massageD2 = ft.TextField(read_only=True, border="none", color=ft.colors.BLACK)
@@ -61,7 +64,6 @@ class ShowImproveGraps:
             on_click=lambda _: self.date_picker2.pick_date(),
         )
 
-
         self.show_improvement_panel = ft.Column(
             [
                 self.exercise_name,
@@ -75,43 +77,73 @@ class ShowImproveGraps:
         )
 
         self.view = ft.Container(
-                    margin=10,
-                    padding=10,
-                    alignment=ft.alignment.center,
-                    bgcolor='#CC99FF',
-                    border_radius=10,
-                    border=ft.border.all(3, '#8532B8'),
-                        content=ft.Column(
-                            width=600,
-                            controls=[
-                                ft.Text("CHECK YOUR IMPROVEMENT", size=55, color=ft.colors.WHITE, weight=ft.FontWeight.W_500,
-                                        selectable=True, font_family="Elephant", text_align=ft.alignment.center),
-                                self.exercise_name,
+            margin=10,
+            padding=10,
+            alignment=ft.alignment.center,
+            bgcolor='#CC99FF',
+            border_radius=10,
+            border=ft.border.all(3, '#8532B8'),
+            content=ft.Column(
+                width=600,
+                controls=[
+                    ft.Text("CHECK YOUR IMPROVEMENT", size=55, color=ft.colors.WHITE, weight=ft.FontWeight.W_500,
+                            selectable=True, font_family="Elephant", text_align=ft.alignment.center),
+                    self.exercise_name,
 
+                    ft.Row(
+                        controls=[
+                            self.date_button1, self.date_button2,
+                        ],
+                    ),
+                    ft.Row(
+                        controls=[
+                            self.massageD1, self.massageD2,
+                        ],
+                    ),
 
-                                ft.Row(
-                                    controls=[
-                                        self.date_button1, self.date_button2,
-                                    ],
-                                ),
-                                ft.Row(
-                                    controls=[
-                                        self.massageD1, self.massageD2,
-                                    ],
-                                ),
+                    ft.Row(
+                        controls=[
+                            self.button1, self.errorM,
+                        ],
+                    )
 
-                                ft.Row(
-                                    controls=[
-                                        self.button1, self.errorM,
-                                    ],
-                                )
-
-                            ],
-                        )
+                ],
+            )
         )
 
+        self.text_chart1 = ft.Container(
+            margin=10,
+            padding=10,
+            alignment=ft.alignment.center,
+            content=ft.Row(
+                alignment=ft.alignment.center,
+                width=600,
+                controls=[
+                    ft.Text(f"THE GRAPH SHOW THE AVG OF THE ALL {self.exercise_name.value} "
+                            f"EXERCISES YOU DID IN THE TIME YOU CHOSE", size=20, color=ft.colors.BLACK,
+                            weight=ft.FontWeight.W_100,
+                            selectable=True, font_family="Century Gothic", text_align=ft.alignment.center),
 
+                ],
+            )
+        )
 
+        self.text_chart2 = ft.Container(
+            margin=10,
+            padding=10,
+            alignment=ft.alignment.center,
+            content=ft.Row(
+                alignment=ft.alignment.center,
+                width=600,
+                controls=[
+                    ft.Text(f"THE GRAPH SHOW THE IMPROVEMENT OF {1} "
+                            f" YOU DID IN THE TIME YOU CHOSE", size=20, color=ft.colors.BLACK,
+                            weight=ft.FontWeight.W_100,
+                            selectable=True, font_family="Century Gothic", text_align=ft.alignment.center),
+
+                ],
+            )
+        )
 
     def change_date1(self, e):
         self.s_date = self.date_picker1.value
@@ -172,44 +204,49 @@ class ShowImproveGraps:
         self.page.clean()
         self.page.add(self.view)
 
-
     def show_graph1(self, exercise_name: str, s_date, e_date):
         chart1 = self.bring_graph1(exercise_name=exercise_name, s_date=s_date, e_date=e_date)
 
         view1 = ft.Column(
-        # width=600,
-        controls=[
-            ft.Container(
-                margin=10,
-                padding=10,
-                alignment=ft.alignment.center,
-                bgcolor='#CC99FF',
-                content=ft.Column(
-                    [
-                        ft.Text("THE DETAILS", size=30, color='#8532B8', weight=ft.FontWeight.W_500,
-                                selectable=True, font_family="Elephant"),
-                        ft.Text("exercise name: " + exercise_name, size=20, color='#8532B8', weight=ft.FontWeight.W_500,
-                                selectable=True, font_family="Arial Rounded MT Bold"),
-                        ft.Text(s_date.strftime("%x") + " - " + e_date.strftime("%x"), size=20, color=ft.colors.BLACK,
-                                weight=ft.FontWeight.W_500, selectable=True, font_family="Arial Rounded MT Bold"),
-                        ft.ElevatedButton(text="change details", on_click=self.click_change_details, bgcolor='#8532B8',
-                                          color='white'),
-                    ]
+            # width=600,
+            controls=[
+                ft.Container(
+                    margin=10,
+                    padding=10,
+                    alignment=ft.alignment.center,
+                    bgcolor='#CC99FF',
+                    content=ft.Column(
+                        [
+                            ft.Text("THE DETAILS", size=30, color='#8532B8', weight=ft.FontWeight.W_500,
+                                    selectable=True, font_family="Elephant"),
+                            ft.Text("exercise name: " + exercise_name, size=20, color='#8532B8',
+                                    weight=ft.FontWeight.W_500,
+                                    selectable=True, font_family="Arial Rounded MT Bold"),
+                            ft.Text(s_date.strftime("%x") + " - " + e_date.strftime("%x"), size=20,
+                                    color=ft.colors.BLACK,
+                                    weight=ft.FontWeight.W_500, selectable=True, font_family="Arial Rounded MT Bold"),
+                            ft.ElevatedButton(text="change details", on_click=self.click_change_details,
+                                              bgcolor='#8532B8',
+                                              color='white'),
+                        ]
+                    )
+                ),
+
+                ft.Row([
+                    self.text_chart1
+                ]),
+
+                ft.Row(
+                    controls=[
+                        chart1
+                    ],
                 )
-            ),
-
-            ft.Column([]),
-
-            ft.Row(
-                controls=[
-                    chart1
-                ],
-            )
-        ],
-    )
+            ],
+        )
         self.page.clean()
         self.page.add(view1)
         self.page.update()
+
 
     def bring_graph1(self, exercise_name, s_date, e_date):
 
@@ -242,8 +279,9 @@ class ShowImproveGraps:
                             from_y=0,
                             to_y=self.count_sets,
                             width=80,
-                            color=ft.colors.BLUE,
-                            tooltip="count sets",
+                            color="#5E5868",
+                            tooltip="count the all sets you did",
+                            tooltip_style=ft.TextStyle(bgcolor=ft.colors.PINK),
                             border_radius=0,
                         ),
                     ],
@@ -255,8 +293,8 @@ class ShowImproveGraps:
                             from_y=0,
                             to_y=self.avgrepete,
                             width=80,
-                            color=ft.colors.BLUE,
-                            tooltip="avg repete",
+                            color="#5E5868",
+                            tooltip="show the avg of repetitions in every exercise",
                             border_radius=0,
                         ),
                     ],
@@ -268,8 +306,8 @@ class ShowImproveGraps:
                             from_y=0,
                             to_y=self.avgtime,
                             width=80,
-                            color=ft.colors.BLUE,
-                            tooltip="avg time",
+                            color="#5E5868",
+                            tooltip="show the avg of time in every exercise",
                             border_radius=0,
                         ),
                     ],
@@ -281,8 +319,8 @@ class ShowImproveGraps:
                             from_y=0,
                             to_y=self.avgweight,
                             width=80,
-                            color=ft.colors.BLUE,
-                            tooltip="avg weight",
+                            color="#5E5868",
+                            tooltip="show the avg of weight in every exercise",
                             border_radius=0,
                         ),
                     ],
@@ -294,8 +332,8 @@ class ShowImproveGraps:
                             from_y=0,
                             to_y=self.avgdistance_KM,
                             width=80,
-                            color=ft.colors.BLUE,
-                            tooltip="avg distance KM",
+                            color="#5E5868",
+                            tooltip="show the avg of distance KM in every exercise",
                             border_radius=0,
                         ),
                     ],
@@ -320,7 +358,8 @@ class ShowImproveGraps:
                         value=3, label=ft.Container(ft.Text("avg weight"), padding=10, on_click=self.click_weight)
                     ),
                     ft.ChartAxisLabel(
-                        value=4, label=ft.Container(ft.Text("avg distance KM"), padding=10, on_click=self.click_distance_KM)
+                        value=4,
+                        label=ft.Container(ft.Text("avg distance KM"), padding=10, on_click=self.click_distance_KM)
                     )
                 ],
                 labels_size=40,
@@ -329,7 +368,7 @@ class ShowImproveGraps:
                 color=ft.colors.GREY_300, width=1, dash_pattern=[3, 3]
             ),
             tooltip_bgcolor=ft.colors.with_opacity(0.5, ft.colors.GREY_300),
-            max_y=max1+1,
+            max_y=max1 + 15,
             interactive=True,
             expand=True,
         )
@@ -340,14 +379,16 @@ class ShowImproveGraps:
         self.page.clean()
         self.show_graph1(exercise_name=self.exercise_name2, s_date=self.s_date, e_date=self.e_date)
 
-        self.show_graph2(exercise_name1=self.exercise_name2, s_date=self.s_date, e_date=self.e_date, lst=self.count_sets_l,
-                          date_lst=self.dates_l, name_param="count sets")
+        self.show_graph2(exercise_name1=self.exercise_name2, s_date=self.s_date, e_date=self.e_date,
+                         lst=self.count_sets_l,
+                         date_lst=self.dates_l, name_param="count sets")
 
     def click_repete(self, e: ft.ControlEvent):
         self.page.clean()
         self.show_graph1(exercise_name=self.exercise_name2, s_date=self.s_date, e_date=self.e_date)
 
-        self.show_graph2(exercise_name1=self.exercise_name2, s_date=self.s_date, e_date=self.e_date, lst=self.avgrepete_l,
+        self.show_graph2(exercise_name1=self.exercise_name2, s_date=self.s_date, e_date=self.e_date,
+                         lst=self.avgrepete_l,
                          date_lst=self.dates_l, name_param="repete")
 
     def click_time(self, e: ft.ControlEvent):
@@ -361,62 +402,63 @@ class ShowImproveGraps:
         self.page.clean()
         self.show_graph1(exercise_name=self.exercise_name2, s_date=self.s_date, e_date=self.e_date)
 
-        self.show_graph2(exercise_name1=self.exercise_name2, s_date=self.s_date, e_date=self.e_date, lst=self.avgweight_l,
+        self.show_graph2(exercise_name1=self.exercise_name2, s_date=self.s_date, e_date=self.e_date,
+                         lst=self.avgweight_l,
                          date_lst=self.dates_l, name_param="weight")
 
     def click_distance_KM(self, e: ft.ControlEvent):
         self.page.clean()
         self.show_graph1(exercise_name=self.exercise_name2, s_date=self.s_date, e_date=self.e_date)
 
-        self.show_graph2(exercise_name1=self.exercise_name2, s_date=self.s_date, e_date=self.e_date, lst=self.avgdistance_KM_l,
+        self.show_graph2(exercise_name1=self.exercise_name2, s_date=self.s_date, e_date=self.e_date,
+                         lst=self.avgdistance_KM_l,
                          date_lst=self.dates_l, name_param="distance KM")
 
     def show_graph2(self, exercise_name1: str, s_date, e_date, lst, date_lst, name_param):
 
         chart_of_params = self.bring_graph2(exercise_name=exercise_name1, s_date=s_date, e_date=e_date, lst=lst,
-                                   date_lst=date_lst)
+                                            date_lst=date_lst)
 
-        view2 = ft.Column(
-            # width=600,
+        view1 = ft.Column(
             controls=[
-                ft.Container(
-                    margin=10,
-                    padding=10,
-                    alignment=ft.alignment.center,
-                    bgcolor='#CC99FF',
-                    content=ft.Column(
-                        [
-                            ft.Text(name_param, size=30, color='#8532B8', weight=ft.FontWeight.W_500,
-                                    selectable=True, font_family="Elephant"),
-                            ft.Text("exercise name: " + exercise_name1, size=20, color='#8532B8',
-                                    weight=ft.FontWeight.W_500,
-                                    selectable=True, font_family="Arial Rounded MT Bold"),
-                            ft.Text(s_date.strftime("%x") + " - " + e_date.strftime("%x"), size=20,
-                                    color=ft.colors.BLACK,
-                                    weight=ft.FontWeight.W_500, selectable=True, font_family="Arial Rounded MT Bold"),
-                            ft.ElevatedButton(text="change details", on_click=self.show_graph1_on_click,
-                                              bgcolor='#8532B8',
-                                              color='white'),
-                        ]
-                    )
-                ),
-
-                ft.Column([]),
 
                 ft.Row(
                     controls=[
-                        chart_of_params
+                        ft.Text(f"THE GRAPH SHOW THE IMPROVEMENT OF {name_param} "
+                                f" YOU DID IN THE TIME YOU CHOSE", size=20, color=ft.colors.BLACK,
+                                weight=ft.FontWeight.W_100,
+                                selectable=True, font_family="Century Gothic", text_align=ft.alignment.center),
                     ],
-                )
-            ],
+                ),
+                chart_of_params,
+
+                ft.Row([])
+
+            ]
         )
 
+        self.page.add(ft.Text(f"THE GRAPH SHOW THE IMPROVEMENT OF {name_param} "
+                                f" YOU DID IN THE TIME YOU CHOSE", size=20, color=ft.colors.BLACK,
+                                weight=ft.FontWeight.W_100,
+                                selectable=True, font_family="Century Gothic", text_align=ft.alignment.center))
+        container1 = ft.Column(
+            width=1000,
+            controls=[
+                ft.Container(
+                    # margin=120,
+                    # padding=120,
+                    alignment=ft.alignment.center,
+                    content=ft.Column([chart_of_params])
+                )]
+        )
+        self.page.add(container1)
+        # self.page.add(chart_of_params)
 
         # view2 = ft.Column([self.chart_of_params])
 
         # self.page.clean()
 
-        self.page.add(chart_of_params)
+        # self.page.add(view1)
         self.page.update()
 
     def bring_graph2(self, exercise_name, s_date, e_date, lst, date_lst):
@@ -431,11 +473,12 @@ class ShowImproveGraps:
         bottom_axis1 = []
 
         n = 0
-        m = 2
+        m = 0
         for i in self.lst:
             new_lst.append(ft.LineChartDataPoint(m, i))
 
             dt_object = datetime.strptime(self.date_lst[n], "%Y-%m-%dT%H:%M:%S")
+            date = str(dt_object.strftime("%x"))
 
             left_axis1.append(ft.ChartAxisLabel(
                 value=i,
@@ -443,17 +486,17 @@ class ShowImproveGraps:
             ))
 
             bottom_axis1.append(ft.ChartAxisLabel(
-                value=m,
-                label=ft.Container(
-                    ft.Text(
-                        str(dt_object.strftime("%x")),
-                        size=16,
-                        weight=ft.FontWeight.BOLD,
-                        color=ft.colors.with_opacity(0.5, ft.colors.ON_SURFACE),
-                    ),
-                    margin=ft.margin.only(top=10),
-                )
-            ))
+                    value=m,
+                    label=ft.Container(
+                        ft.Text(
+                            value=date,
+                            size=14,
+                            weight=ft.FontWeight.BOLD,
+                            color=ft.colors.with_opacity(0.5, ft.colors.ON_SURFACE),
+                        ),
+                        # margin=ft.margin.only(top=10),
+                    )
+                ))
 
             n = n + 1
             m = m + 2
@@ -462,7 +505,7 @@ class ShowImproveGraps:
             ft.LineChartData(
                 data_points=new_lst,
                 stroke_width=5,
-                color=ft.colors.CYAN,
+                color="#5E5868",
                 curved=True,
                 stroke_cap_round=True,
             )
@@ -486,12 +529,12 @@ class ShowImproveGraps:
                 labels_size=32,
             ),
             tooltip_bgcolor=ft.colors.with_opacity(0.8, ft.colors.BLUE_GREY),
-            min_y=0
-            # max_y=6,
-            # min_x=0,
-            # max_x=11,
+            min_y=0,
+            max_y=max(self.lst) + 10,
+            min_x=0,
+            max_x=m,
             # # animate=5000,
-            # expand=True,
+            # expand=True
         )
 
         return self.chart_one_parmeter

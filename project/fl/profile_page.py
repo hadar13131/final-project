@@ -90,9 +90,8 @@ class Profile_Page:
                                  ],
                              ))
 
-
-
         self.count_workouts = ft.Column(
+            alignment=ft.alignment.top_center,
             controls=[
                 ft.Column([
                     ft.Text("WORKOUT COUNTER", size=30, color='#8532B8', weight=ft.FontWeight.W_500,
@@ -123,8 +122,8 @@ class Profile_Page:
         )
 
 
-
-        self.table1 = ft.Column(
+        self.table1 = ft.Row(
+            # scroll=ft.ScrollMode.ALWAYS,
             # width=600,
             controls=[
                 ft.Container(
@@ -132,20 +131,24 @@ class Profile_Page:
                     padding=10,
                     alignment=ft.alignment.center,
                     bgcolor='#CC99FF',
-                    content=ft.Column(
-                        [
-                            ft.Row([
-                                ft.Text("YOUR WORKOUTS PLAN:", size=20, color='#8532B8',
-                                        weight=ft.FontWeight.W_500,
-                                        selectable=True, font_family="Arial Rounded MT Bold"),
-                            ]),
+                    content=ft.Row(
+                        controls=[
+                            # ft.Row([
+                            #     ft.Text("YOUR WORKOUTS PLAN:", size=20, color='#8532B8',
+                            #             weight=ft.FontWeight.W_500,
+                            #             selectable=True, font_family="Arial Rounded MT Bold"),
+                            # ]),
 
-                            ft.Row([
-                                ft.Column([self.workout_table]),
+                            ft.Column([
+
+                                    # scroll=ft.ScrollMode.ALWAYS,
+                                    self.workout_table
                                 # ft.ElevatedButton(text="change details", on_click=self.change_your_info,
                                 #                   bgcolor='#8532B8',
                                 #                   color='white'),
-                            ]),
+                            ]
+
+                            ),
 
                         ]
                     )
@@ -161,8 +164,8 @@ class Profile_Page:
         self.view = (ft.Column
         ([
             ft.Row([
-            ft.Text("YOUR Profile Page", size=55, color='#8532B8', weight=ft.FontWeight.W_500,
-                                selectable=True, font_family="Elephant", text_align=ft.alignment.center),
+            ft.Text("YOUR Profile Page", size=55, color=ft.colors.BLACK, weight=ft.FontWeight.W_500,
+                                    selectable=True, font_family="Century Gothic", text_align=ft.alignment.center),
             ]),
             ft.Row([
                 self.button_show_info
@@ -173,24 +176,27 @@ class Profile_Page:
         ]))
 
 
-        self.view2 = ft.Row([
+        self.view2 = ft.Column([
                          ft.Container(
                              margin=10,
                              padding=10,
-                             alignment=ft.alignment.center,
+                             alignment=ft.alignment.top_center,
                              bgcolor='#CC99FF',
                              border_radius=10,
                              border=ft.border.all(3, '#8532B8'),
                              content=ft.Column(
                                  width=600,
                                  controls=[
-                                     ft.Column([
+                                     ft.Column(scroll=ft.ScrollMode.ALWAYS,
+                                            height=1000,
+                                               controls=[
                                              ft.Row([
                                                  ft.Text("YOUR WORKOUTS PLAN:", size=20, color='#8532B8',
                                                          weight=ft.FontWeight.W_500,
                                                          selectable=True, font_family="Arial Rounded MT Bold")
                                              ]),
-                                             ft.Row([
+                                             ft.Row(
+                                                 controls=[
                                                  self.table1
                                              ]),
 
@@ -432,12 +438,14 @@ class Profile_Page:
         self.page.scroll = ft.ScrollMode.ALWAYS
 
         row_container = ft.Row([self.view])
-        row_container.main_alignment = ft.MainAxisAlignment.CENTER
+        # row_container.main_alignment = ft.MainAxisAlignment.CENTER
 
         row_container.width = 920
         self.page.add(row_container)
 
-        self.page.add(ft.Row([self.view2, self.veiw3]))
+        self.page.add(ft.Row(
+            alignment=ft.alignment.top_center,
+            controls=[self.view2,self.veiw3]))
         self.page.bgcolor = "#E7CDFF"
         self.page.update()
 

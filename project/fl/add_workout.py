@@ -148,9 +148,9 @@ class AddFullWorkout:
 
         self.text2 = ft.Text("add a set:")
         self.repetitionsS1 = ft.TextField(label="repetitions", autofocus=True, border_color='#8532B8')
-        self.timeS1 = ft.TextField(label="time", autofocus=True, border_color='#8532B8')
-        self.weightS1 = ft.TextField(label="weight", autofocus=True, border_color='#8532B8')
-        self.distance_KMS1 = ft.TextField(label="distance_KM", autofocus=True, border_color='#8532B8')
+        self.timeS1 = ft.TextField(label="time (hours)", autofocus=True, border_color='#8532B8')
+        self.weightS1 = ft.TextField(label="weight (Kg)", autofocus=True, border_color='#8532B8')
+        self.distance_KMS1 = ft.TextField(label="distance (KM)", autofocus=True, border_color='#8532B8')
 
         self.add_set_button = ft.ElevatedButton(text="add the set to exercise", on_click=self.add_set, bgcolor='#8532B8',
                                                color='white')
@@ -400,7 +400,7 @@ class AddFullWorkout:
         self.page.horizontal_alignment = 'CENTER'
         self.page.vertical_alignment = 'CENTER'
 
-        self.page.bgcolor = "#E7CDFF"
+        self.page.bgcolor = ft.colors.GREY_100
         # self.page.add(ft.Column([self.first_panel]))
         self.page.update()
 
@@ -629,6 +629,7 @@ class ShowTheWorkout:
     def main(self, page: ft.Page) -> None:
         self.page = page
         self.page.scroll = ft.ScrollMode.ALWAYS
+        self.page.bgcolor = ft.colors.GREY_100
         self.check1()
         self.page.update()
 
@@ -994,7 +995,9 @@ class CalendarApp:
     def main(page: ft.Page, client: Client):
         client1 = client
         # page.theme_mode = ft.ThemeMode.DARK
-        page.bgcolor = "1f2128"
+        # page.bgcolor = "1f2128"
+        page.bgcolor = ft.colors.GREY_100
+
 
         task_manager = CalendarApp.TaskManager(client=client1)
         grid = CalendarApp.DateGrid(

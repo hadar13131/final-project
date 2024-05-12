@@ -5,6 +5,7 @@ import calendar
 from datetime import datetime
 
 import flet as ft
+import math
 
 # from login_signup import LoginPage
 # from login_signup import SignUpPage
@@ -26,25 +27,50 @@ class First_page:
 
         self.button_to_login = ft.ElevatedButton(text="To login", on_click=self.go_to_login, bgcolor='#8532B8',
                                                  color='white')
+        self.button_to_login = ft.CupertinoFilledButton(text="To login", on_click=self.go_to_login)
 
         self.button_to_signup = ft.ElevatedButton(text="To sign up", on_click=self.go_to_signup, bgcolor='#8532B8',
                                                   color='white')
+        self.button_to_signup = ft.CupertinoFilledButton(text="To sign up", on_click=self.go_to_signup)
 
         self.button_to_learnmore = ft.ElevatedButton(text="To learn more", on_click=self.go_to_learnmore,
                                                      bgcolor='#8532B8',
                                                      color='white')
 
+
         self.main_panel = ft.Column(
-            [
-                self.text,
-                self.button_to_login,
-                self.button_to_signup,
-                self.button_to_learnmore
-            ]
-            # ,
-            # scroll=ft.ScrollMode.ALWAYS,
-            # height=1000
+            # width=600,
+            controls=[
+                ft.Row([
+                    ft.Text("Welcome To ", size=55, color=ft.colors.BLACK, weight=ft.FontWeight.W_500,
+                            selectable=True, font_family="Century Gothic"),
+                    ft.Text("POWER APP ", size=80, color=ft.colors.BLACK, weight=ft.FontWeight.W_500,
+                            selectable=True, font_family="Century Gothic")
+                ]),
+            ],
         )
+
+        self.main_panel1 = ft.Row(
+            # width=600,
+            controls=[
+                ft.Container(
+                    margin=10,
+                    padding=10,
+                    alignment=ft.alignment.center,
+                    # bgcolor='#CC99FF',
+                    content=ft.Row(
+                        [
+
+                            self.button_to_login,
+                            self.button_to_signup,
+                            # self.button_to_learnmore
+                        ]
+                    )
+                )
+            ],
+        )
+
+
 
     def go_to_login(self, e: ft.ControlEvent) -> None:
         # Function to navigate to App3 page
@@ -66,12 +92,22 @@ class First_page:
 
     def main(self, page: ft.Page) -> None:
         self.page = page
-
+        self.page.bgcolor = ft.colors.WHITE
         row_container = ft.Row([self.main_panel], auto_scroll=True)
         row_container.main_alignment = ft.MainAxisAlignment.CENTER
 
         row_container.width = 920
         self.page.add(row_container)
+        self.page.update()
+
+
+        row_container = ft.Row([self.main_panel1], auto_scroll=True)
+        row_container.main_alignment = ft.MainAxisAlignment.CENTER
+
+        row_container.width = 920
+        self.page.add(row_container)
+        self.page.update()
+
 
         # self.page.add(self.main_panel_login, self.main_panel_signup)
         # self.page.add(self.main_panel_signup)
@@ -79,6 +115,8 @@ class First_page:
         self.page.horizontal_alignment = 'CENTER'
         self.page.vertical_alignment = 'CENTER'
 
+        self.page.add(self.main_panel)
+        self.page.add(self.main_panel1)
         self.page.update()
 
 

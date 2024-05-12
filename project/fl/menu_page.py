@@ -71,8 +71,6 @@ class MenuApp:
 
     def main(self, page: ft.Page):
         self.page = page
-        # app_instance = App3()
-        self.page.title = "CupertinoNavigationBar Example"
         self.page.navigation_bar = ft.CupertinoNavigationBar(
             icon_size=30,
             bgcolor="#BB77F9",
@@ -93,7 +91,8 @@ class MenuApp:
         self.page.appbar = ft.AppBar(
             leading=ft.Icon(ft.icons.PALETTE),
             leading_width=40,
-            title=ft.Text("START TO MOVE"),
+            title=ft.Text("Power APP"),
+            title_text_style=ft.TextStyle(size=40, weight=ft.FontWeight.BOLD, color="#5E5868"),
             center_title=True,
             bgcolor=ft.colors.SURFACE_VARIANT,
             actions=[

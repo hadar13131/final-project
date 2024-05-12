@@ -239,7 +239,7 @@ def check_email(email: str) -> dict[str, str]:
     for user in users:
         # Check if the username and password match
         if user.email == email:
-            return {"response": "the email not valid"}
+            return {"response": "the email not valid, try to login"}
 
     return {"response": "the email is valid"}
 

@@ -107,7 +107,7 @@ class SignOutPage:
         self.username3 = ft.TextField(label="User Name", autofocus=True, border_color='#8532B8')
         self.password3 = ft.TextField(label="Password", autofocus=True, password=True, can_reveal_password=True,
                                       border_color='#8532B8')
-        self.button3 = ft.ElevatedButton(text="Delete", on_click=self.click3, bgcolor='#8532B8', color='white')
+        self.button3 = ft.ElevatedButton(text="signout", on_click=self.click3, bgcolor='#8532B8', color='white')
         self.massageD3 = ft.TextField(read_only=True, border="none", color='#A8468C')
 
         self.main_panel_signout = ft.Column(
