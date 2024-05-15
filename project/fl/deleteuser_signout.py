@@ -1,12 +1,9 @@
 from project.models import Set, Exercise
 import json
-
-import calendar
-from datetime import datetime
+import hashlib
 
 import flet as ft
-import calendar
-from datetime import datetime
+
 from project.client import Client
 
 # from login_signup import LoginPage
@@ -43,6 +40,7 @@ class DeleteUserPage:
     def click3(self, e: ft.ControlEvent) -> None:
         username = self.username3.value
         password = self.password3.value
+        password = hashlib.sha256(password.encode()).hexdigest()
 
         self.username3.error_text = ""
         self.password3.error_text = ""
@@ -126,6 +124,7 @@ class SignOutPage:
     def click3(self, e: ft.ControlEvent) -> None:
         username = self.username3.value
         password = self.password3.value
+        password = hashlib.sha256(password.encode()).hexdigest()
 
         self.username3.error_text = ""
         self.password3.error_text = ""

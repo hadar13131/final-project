@@ -1,5 +1,6 @@
 from project.models import Set, Exercise
 import json
+import hashlib
 
 import calendar
 from datetime import datetime
@@ -89,6 +90,7 @@ class LoginPage:
         email = self.email1.value
         username = self.username1.value
         password = self.password1.value
+        password = hashlib.sha256(password.encode()).hexdigest()
 
         # error massages
         self.email1.error_text = ""
@@ -203,6 +205,8 @@ class SignUpPage:
 
         # self.gender = ft.TextField(label="gender", autofocus=True, border_color='#8532B8')
         self.gender = ft.Dropdown(
+            label="gender",
+            border_color='#8532B8',
             width=100,
             options=[
                 ft.dropdown.Option("Female"),
@@ -405,6 +409,7 @@ class SignUpPage:
     def click2(self, e: ft.ControlEvent) -> None:
         username = self.username2.value
         password = self.password2.value
+        password = hashlib.sha256(password.encode()).hexdigest()
 
         self.username2.error_text = ""
         self.password2.error_text = ""

@@ -493,11 +493,40 @@ class HomePage:
             ]
         )
 
+        self.home_page_panel = ft.Column(
+            alignment=ft.alignment.top_left,
+            controls=[
+                # self.button_Back,
+                ft.Container(
+                    margin=20,
+                    padding=20,
+                    # height=10,
+                    # width=10,
+                    alignment=ft.alignment.center,
+                    bgcolor=ft.colors.WHITE,
+                    border_radius=10,
+                    border=ft.border.all(30, '#E1F3F1'),
+                    content=ft.Column(
+                        [
+
+                            ft.Text("HOME PAGE", size=55, color=ft.colors.BLACK, weight=ft.FontWeight.W_500,
+                                    selectable=True, font_family="Century Gothic"),
+
+                            ft.Text("NEW MASSAGE", size=30, color=ft.colors.BLACK, weight=ft.FontWeight.W_500,
+                                    selectable=True,
+                                    font_family="Century Gothic"),
+                        ]
+                    )
+                )
+
+            ]
+        )
+
+
+
     def main(self, page: ft.Page) -> None:
         self.page = page
         self.page.scroll = ft.ScrollMode.ALWAYS
-
-
 
         row_container = ft.Row([self.home_page_panel])
         row_container.main_alignment = ft.MainAxisAlignment.CENTER

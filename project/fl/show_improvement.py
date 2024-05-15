@@ -249,19 +249,15 @@ class ShowImproveGraps:
 
 
     def bring_graph1(self, exercise_name, s_date, e_date):
-
         username = self.client.username
-
         date1 = s_date
         date2 = e_date
 
         date11 = str(date1.strftime("%x"))
         date22 = str(date2.strftime("%x"))
-
         dates = date11 + " - " + date22
 
         response = self.client.showimprovement2(username, exercise_name, s_date, e_date)
-
         self.count_sets = response["count_sets"]
         self.avgrepete = response["repete"]
         self.avgtime = response["time"]

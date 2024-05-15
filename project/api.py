@@ -10,7 +10,7 @@ from datetime import datetime
 
 app = FastAPI(docs_url="/")
 
-engine = create_engine("sqlite:///./database1.db")
+engine = create_engine("sqlite:///./PowerAppDatabase.db")
 
 md = MetaData()
 
@@ -44,10 +44,26 @@ workout_table = Table(
 
 md.create_all(engine)
 
+# #create table to save users massages
+# massage_table = Table(
+#     "workouts", md,
+#     Column("massageid", INTEGER, primary_key=True),
+#     Column("massage_type", String),
+#     Column("from_user", String),
+#     Column("to_user", String),
+#     Column("date", DateTime),
+#     Column("the_massage", JSON)
+# )
+#
+# md.create_all(engine)
+
+
+
+
 
 # to hash the password
-def hash_password(password: str) -> str:
-    return hashlib.sha256(password.encode()).hexdigest()
+# def hash_password(password: str) -> str:
+#     return hashlib.sha256(password.encode()).hexdigest()
 
 
 @app.get("/lst_of_workouts_by_username")
@@ -93,7 +109,7 @@ def signup(name: str, password: str) -> dict[str, str]:
 
     session.execute(
         user_table.insert().values(
-            name=name, password=hash_password(password),
+            name=name, password=password,
             first_name="",
             last_name="",
             phone_num="",
@@ -145,7 +161,7 @@ def signout(name: str, password: str) -> dict[str, str]:
 
     users = session.execute(user_table.select())
 
-    password_hash = hash_password(password)
+    password_hash = password
 
     for user in users:
         # Check if the username and password match
@@ -163,7 +179,7 @@ def delete(name: str, password: str) -> dict[str, str]:
 
     users = session.execute(user_table.select())
 
-    password_hash = hash_password(password)
+    password_hash = password
 
     for user in users:
         # Check if the username and password match
@@ -198,7 +214,7 @@ def authenticate(name: str, password: str) -> dict[str, str]:
     session = Session()
 
     users = session.execute(user_table.select())
-    password_hash = hash_password(password)
+    password_hash = password
 
     for user in users:
         # Check if the username and password match
@@ -214,7 +230,7 @@ def authenticate2(email: str, name: str, password: str) -> dict[str, str]:
     session = Session()
 
     users = session.execute(user_table.select())
-    password_hash = hash_password(password)
+    password_hash = password
 
     for user in users:
         # Check if the username and password match
@@ -473,7 +489,6 @@ def showimprovement2(userid: str, exercise_name: str, s_date: datetime, e_date: 
     for e in exec_lst: #going through the full workout
         e2 = e[4] #take the list of exercises
         for j in e2: #going through the exercises list
-            print(j)
             e3 = json.loads(j) #change the str to dict
             e3 = e3["sets"] #find the value of the "sets" key
             for i in e3: #going through the lst of sets
@@ -588,7 +603,3 @@ def bring_info(name: str):
         response = {"first_name": "0", "last_name": "0", "phone_num": "0", "age": 0,
                     "gender": "0", "goals": "0"}
     return response
-
-
-
-
