@@ -44,6 +44,7 @@ workout_table = Table(
 
 md.create_all(engine)
 
+
 # #create table to save users massages
 # massage_table = Table(
 #     "workouts", md,
@@ -56,9 +57,6 @@ md.create_all(engine)
 # )
 #
 # md.create_all(engine)
-
-
-
 
 
 # to hash the password
@@ -79,7 +77,8 @@ def lst_of_workouts_by_username(userid: str) -> dict[str, list[tuple]]:
 @app.get("/lst_of_exercise_names")
 def lst_of_exercise_names(userid: str):
     session = Session()
-    find = session.query(workout_table).filter(workout_table.c.userid == userid).all()  # filter by userid, get lst of workouts
+    find = session.query(workout_table).filter(
+        workout_table.c.userid == userid).all()  # filter by userid, get lst of workouts
     lst = []
     for f in find:
         n = f[4]
@@ -129,7 +128,6 @@ def signup(name: str, password: str) -> dict[str, str]:
 @app.get("/fill_info")
 def fill_info(name: str, first_name: str, last_name: str, phone_num: str, email: str, age: int, gender: str,
               goals: str) -> dict[str, str]:
-
     session = Session()
     # if session.query(user_table).filter_by(name=name).first():
     # find = session.query(user_table).filter_by(name=username).first()
@@ -170,6 +168,7 @@ def signout(name: str, password: str) -> dict[str, str]:
 
     return {"response": "the details are not match"}
 
+
 # end signuout
 
 
@@ -206,6 +205,7 @@ def delete(name: str, password: str) -> dict[str, str]:
 
     return {"response": "user data not found"}
 
+
 # end delete
 
 
@@ -222,6 +222,7 @@ def authenticate(name: str, password: str) -> dict[str, str]:
             return {"response": "user authenticated"}
 
     return {"response": "user data not found"}
+
 
 # end authenticate
 
@@ -244,6 +245,7 @@ def authenticate2(email: str, name: str, password: str) -> dict[str, str]:
 
     return {"response": "user data not found"}
 
+
 # end authenticate2
 
 @app.get("/check_email")
@@ -258,6 +260,7 @@ def check_email(email: str) -> dict[str, str]:
             return {"response": "the email not valid, try to login"}
 
     return {"response": "the email is valid"}
+
 
 # end check_email
 
@@ -288,7 +291,6 @@ def addworkout(userid: str, workout_name: str, date: datetime, exerciselist: str
         )
         session.commit()
 
-
     return {"response": "the workout added"}
 
 
@@ -312,8 +314,6 @@ def deleteworkout(userid: str, workout_name: str, date: datetime):
             return {"response": "delete success"}
 
     return {"response": "workout data not found"}
-
-
 
 
 # add exercise to exist workout
@@ -356,12 +356,12 @@ def addexercisetoworkout(userid: str, date: str, workout_name: str, exercise):
 # delete exercise to exist workout
 # **to change that it will be by workout id and current userid
 @app.get("/deletexercisefromworkout")
-def deletexercisefromworkout(userid: str, exercise):
+def deletexercisefromworkout(userid: str, date, workout_name: str, exercise_name: str):
     session = Session()
-    find = session.query(workout_table).filter(workout_table.c.userid == "hadar44").first()
+    find = session.query(workout_table).filter(workout_table.c.userid == userid).first()
 
     exec_list = [find[3]]
-    exec_to_check = exercise  # Set to check
+    exec_to_check = exercise_name  # Set to check
     exists = False
     for e in exec_list:
         if e == exec_to_check:
@@ -378,13 +378,14 @@ def deletexercisefromworkout(userid: str, exercise):
     else:
         return {"response": "the exercise doesnt found"}
 
+
 @app.get("/addsettoexercise2")
 def addsettoexercise2(userid: str, date: str, workout_name: str, exercise_name: str, power: str, sets):
     session = Session()
 
     find = session.query(workout_table).filter(workout_table.c.userid == userid).all()
-    exec = find[0][4] #the lst of exer of the first workout
-    workoutid1 = find[0][0] #the workout id of the first workout
+    exec = find[0][4]  # the lst of exer of the first workout
+    workoutid1 = find[0][0]  # the workout id of the first workout
 
     for f in find:
         date1 = f[3]
@@ -421,13 +422,14 @@ def addsettoexercise2(userid: str, date: str, workout_name: str, exercise_name: 
     session.commit()
     return {"response": "the set added"}
 
+
 @app.get("/addsettoexercise")
 def addsettoexercise(userid: str, date: str, workout_name: str, exercise, sets):
     session = Session()
 
     find = session.query(workout_table).filter(workout_table.c.userid == userid).all()
-    exec = find[0][4] #the lst of exer of the first workout
-    workoutid1 = find[0][0] #the workout id of the first workout
+    exec = find[0][4]  # the lst of exer of the first workout
+    workoutid1 = find[0][0]  # the workout id of the first workout
 
     for f in find:
         date1 = f[3]
@@ -465,19 +467,104 @@ def addsettoexercise(userid: str, date: str, workout_name: str, exercise, sets):
     return {"response": "the set added"}
 
 
-@app.get("/showimprovement2")
-def showimprovement2(userid: str, exercise_name: str, s_date: datetime, e_date: datetime):
+@app.get("/deletesetfromexercise")
+def deletesetfromexercise(userid: str, date: datetime, workout_name: str, exercise_name: str, sets_index: int):
+    session = Session()
+
+    find = session.query(workout_table).filter(workout_table.c.userid == userid, workout_table.c.date == date).all()
+    exec_lst = find[0][4]  # the lst of exer of the first workout
+    workoutid1 = find[0][0]  # the workout id of the first workout
+
+    for f in find:
+        if f[2] == workout_name: #find the specific workout by name
+            exec_lst = f[4] #save the exercise list
+            workoutid1 = f[0]
+            break
+
+    exercise = json.loads(exec_lst[0])
+
+    for e1 in exec_lst: #go over the exercises
+        e = json.loads(e1)
+        if e["name"] == exercise_name: #find the specific exercise by name
+            exercise = e #save the exercise
+            break
+
+    chosen_set = exercise["sets"][sets_index] #save the specific set in the exercise by index
+    exercise["sets"].remove(chosen_set) #delete the set from the exercise sets
+    n = 0
+    for i in exec_lst:# go over the exercises
+        e = json.loads(i)
+        if e["name"] == exercise_name: #find the specific exercise by name
+            # i = json.dumps(exercise) #change the specific exercise
+            exec_lst[n] = json.dumps(exercise)
+            break
+        else:
+            n = n + 1
+
+    # str_exer_lst = json.dumps(exec_lst) #from dict to string
+
+    stmt = update(workout_table).where(workout_table.c.workoutid == workoutid1).values(exerciselist=exec_lst)
+    session.execute(stmt)
+    session.commit()
+    return {"response": "the set deleted"}
+
+@app.get("/updatesetinexercise")
+def updatesetinexercise(userid: str, date: datetime, workout_name: str, exercise_name: str, sets_index: int,
+                        updated_set: dict):
+    session = Session()
+
+    find = session.query(workout_table).filter(workout_table.c.userid == userid, workout_table.c.date == date).all()
+    exec_lst = find[0][4]  # the lst of exer of the first workout
+    workoutid1 = find[0][0]  # the workout id of the first workout
+
+    for f in find:
+        if f[2] == workout_name: #find the specific workout by name
+            exec_lst = f[4] #save the exercise list
+            workoutid1 = f[0]
+            break
+
+    exercise = json.loads(exec_lst[0])
+
+    for e1 in exec_lst: #go over the exercises
+        e = json.loads(e1)
+        if e["name"] == exercise_name: #find the specific exercise by name
+            exercise = e #save the exercise
+            break
+
+    exercise["sets"][sets_index] = updated_set
+
+    n = 0
+    for i in exec_lst:# go over the exercises
+        e = json.loads(i)
+        if e["name"] == exercise_name: #find the specific exercise by name
+            # i = json.dumps(exercise) #change the specific exercise
+            exec_lst[n] = json.dumps(exercise)
+            break
+        else:
+            n = n + 1
+
+    # str_exer_lst = json.dumps(exec_lst) #from dict to string
+
+    stmt = update(workout_table).where(workout_table.c.workoutid == workoutid1).values(exerciselist=exec_lst)
+    session.execute(stmt)
+    session.commit()
+    return {"response": "the set updated"}
+
+
+@app.get("/showimprovement")
+def showimprovement(userid: str, exercise_name: str, s_date: datetime, e_date: datetime):
     session = Session()
     exec_lst = []
-    find = session.query(workout_table).filter(workout_table.c.userid == userid).all() #filter by userid, get lst of workouts
+    find = session.query(workout_table).filter(
+        workout_table.c.userid == userid).all()  # filter by userid, get lst of workouts
 
-    for f in find: # going through the workouts
-        if f[3] > s_date and f[3] < e_date: #check if its in the right date
-            l = f[4] #get the list of exercises
-            for l2 in l: #going through the exercises
-                l3 = json.loads(l2) #from string to dict
-                if l3["name"] == exercise_name: #check if there is the exercise the user want
-                    exec_lst.append(f) #add to lst the all workout
+    for f in find:  # going through the workouts
+        if f[3] > s_date and f[3] < e_date:  # check if its in the right date
+            l = f[4]  # get the list of exercises
+            for l2 in l:  # going through the exercises
+                l3 = json.loads(l2)  # from string to dict
+                if l3["name"] == exercise_name:  # check if there is the exercise the user want
+                    exec_lst.append(f)  # add to lst the all workout
                     break
 
     repete = 0
@@ -486,19 +573,19 @@ def showimprovement2(userid: str, exercise_name: str, s_date: datetime, e_date: 
     distance_KM = 0
     n = 0
 
-    for e in exec_lst: #going through the full workout
-        e2 = e[4] #take the list of exercises
-        for j in e2: #going through the exercises list
-            e3 = json.loads(j) #change the str to dict
-            e3 = e3["sets"] #find the value of the "sets" key
-            for i in e3: #going through the lst of sets
+    for e in exec_lst:  # going through the full workout
+        e2 = e[4]  # take the list of exercises
+        for j in e2:  # going through the exercises list
+            e3 = json.loads(j)  # change the str to dict
+            e3 = e3["sets"]  # find the value of the "sets" key
+            for i in e3:  # going through the lst of sets
                 repete += i["repetitions"]
                 time += int(i["time"])
                 weight += int(i["weight"])
                 distance_KM += int(i["distance_KM"])
-                n = n + 1 #counter
+                n = n + 1  # counter
 
-    #find the avg
+    # find the avg
     if n != 0:
         repete = repete / n
         time = time / n
@@ -511,7 +598,64 @@ def showimprovement2(userid: str, exercise_name: str, s_date: datetime, e_date: 
         return {"count_sets": 0, "repete": 0, "time": 0, "weight": 0, "distance_KM": 0}
 
 
-def return_the_avg(sets, name: str) -> int: #if the name is count_sets, its return the number of sets
+@app.get("/showimprovement2")
+def showimprovement2(userid: str, exercise_name: str, s_date: datetime, e_date: datetime):
+    session = Session()
+    exec_lst = []
+    find = session.query(workout_table).filter(
+        workout_table.c.userid == userid).all()  # filter by userid, get lst of workouts
+
+    for f in find:  # going through the workouts
+        if f[3] > s_date and f[3] < e_date:  # check if its in the right date
+            l = f[4]  # get the list of exercises
+            for l2 in l:  # going through the exercises
+                l3 = json.loads(l2)  # from string to dict
+                if l3["name"] == exercise_name:  # check if there is the exercise the user want
+                    exec_lst.append(f)  # add to lst the all workout
+                    break
+
+    repete = 0
+    time = 0
+    weight = 0
+    distance_KM = 0
+    n = 0
+
+    for e in exec_lst:  # going through the full workout
+        e2 = e[4]  # take the list of exercises
+        for j in e2:  # going through the exercises list
+            e3 = json.loads(j)  # change the str to dict
+            e3 = e3["sets"]  # find the value of the "sets" key
+            for i in e3:  # going through the lst of sets
+
+                # the improvement of the time should be by 1 KM
+
+                if int(i["distance_KM"]) != 0:
+                    time += (int(i["time"]) / i["distance_KM"])
+                    distance_KM += int(i["distance_KM"])
+
+                else:
+                    time += int(i["time"])
+                    distance_KM += int(i["distance_KM"])
+
+                weight += int(i["weight"])
+                repete += i["repetitions"]
+
+                n = n + 1  # counter
+
+    # find the avg
+    if n != 0:
+        repete = repete / n
+        time = time / n
+        weight = weight / n
+        distance_KM = distance_KM / n
+
+        return {"count_sets": n, "repete": repete, "time": time, "weight": weight, "distance_KM": distance_KM}
+
+    else:
+        return {"count_sets": 0, "repete": 0, "time": 0, "weight": 0, "distance_KM": 0}
+
+
+def return_the_avg(sets, name: str) -> int:  # if the name is count_sets, its return the number of sets
 
     count = 0
     n = 0
@@ -531,11 +675,13 @@ def return_the_avg(sets, name: str) -> int: #if the name is count_sets, its retu
     else:
         return 0
 
+
 @app.get("/improve_with_params2")
 def improve_with_params2(userid: str, exercise_name: str, s_date: datetime, e_date: datetime):
     session = Session()
     workouts_lst = []
-    find = session.query(workout_table).filter(workout_table.c.userid == userid).all() #filter by userid, get lst of workouts
+    find = session.query(workout_table).filter(
+        workout_table.c.userid == userid).all()  # filter by userid, get lst of workouts
 
     full_workout_l = []
     dates_l = []
@@ -545,12 +691,12 @@ def improve_with_params2(userid: str, exercise_name: str, s_date: datetime, e_da
     weight_avg_l = []
     distance_KM_avg_l = []
 
-    for f in find: # going through the workouts
-        if f[3] > s_date and f[3] < e_date: #check if its in the right date
-            l = f[4] #get the list of exercises
-            for l2 in l: #going through the exercises
-                l3 = json.loads(l2) #from string to dict
-                if l3["name"] == exercise_name: #check if there is the exercise the user want
+    for f in find:  # going through the workouts
+        if f[3] > s_date and f[3] < e_date:  # check if its in the right date
+            l = f[4]  # get the list of exercises
+            for l2 in l:  # going through the exercises
+                l3 = json.loads(l2)  # from string to dict
+                if l3["name"] == exercise_name:  # check if there is the exercise the user want
                     full_workout_l.append(f)
                     break
 
@@ -568,12 +714,10 @@ def improve_with_params2(userid: str, exercise_name: str, s_date: datetime, e_da
                 distance_KM_avg_l.append(return_the_avg(l3["sets"], "distance_KM"))
                 count_sets_l.append(return_the_avg(l3["sets"], "count_sets"))
 
-
     dict1 = {"dates": dates_l, "count_sets": count_sets_l, "repetitions_avg": repetitions_avg_l, "time_avg": time_avg_l,
              "weight_avg": weight_avg_l, "distance_KM_avg": distance_KM_avg_l}
 
     return dict1
-
 
 
 def return_dates_in_order(dates_lst) -> list:

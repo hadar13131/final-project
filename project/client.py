@@ -65,7 +65,6 @@ class Client:
         return response1.json()
 
 
-
     def check_email(self, email):
         credentials = dict(email=email)
 
@@ -163,8 +162,8 @@ class Client:
         return response.json()
 
 
-    def deletexercisefromworkout(self, userid, exercise):
-        credentials = dict(userid=userid, exercise=exercise)
+    def deletexercisefromworkout(self, userid, date, workout_name, exercise_name):
+        credentials = dict(userid=userid, date=date, workout_name=workout_name, exercise_name=exercise_name)
 
         response = requests.get(
             f"{self.server_address}/deletexercisefromworkout",
@@ -189,6 +188,32 @@ class Client:
 
         response = requests.get(
             f"{self.server_address}/addsettoexercise2",
+            params=credentials
+        )
+
+        self.user_workout_lst = self.lst_of_workouts_by_username(self.username)["response"]
+        return response.json()
+
+    def deletesetfromexercise(self, userid: str, date: datetime, workout_name: str, exercise_name: str, sets_index: int):
+        credentials = dict(userid=userid, date=date, workout_name=workout_name, exercise_name=exercise_name,
+                           sets_index=sets_index)
+
+        response = requests.get(
+            f"{self.server_address}/deletesetfromexercise",
+            params=credentials
+        )
+
+        self.user_workout_lst = self.lst_of_workouts_by_username(self.username)["response"]
+        return response.json()
+
+    def updatesetinexercise(self, userid: str, date: datetime, workout_name: str, exercise_name: str,
+                            sets_index: int, updated_set: dict):
+
+        credentials = dict(userid=userid, date=date, workout_name=workout_name, exercise_name=exercise_name,
+                           sets_index=sets_index, updated_set=updated_set)
+
+        response = requests.get(
+            f"{self.server_address}/updatesetinexercise",
             params=credentials
         )
 

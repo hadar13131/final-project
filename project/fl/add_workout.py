@@ -11,6 +11,285 @@ from project.client import Client
 
 import project.check_errors as c_e
 
+
+class EditWorkout:
+    def __init__(self, client: Client, date):
+        self.page = None
+        self.client = client
+        self.date = datetime.strptime(date, "%B %d, %Y")  # from string to datetime
+        self.str_date = date
+
+        self.workout_lst = self.client.user_workout_lst
+
+        self.massage = ft.TextField(read_only=True, border="none", color='#A8468C')
+        self.massage2 = ft.TextField(read_only=True, border="none", color='#A8468C')
+
+        self.lst_name_workout = ft.Dropdown(
+            width=100,
+            options=self.return_workout_names(),
+        )
+
+        self.button1 = ft.ElevatedButton(text="continue", on_click=self.show_the_exercises, bgcolor='#E1F3F1',
+                                         color='black')
+        self.button2 = ft.ElevatedButton(text="continue", on_click=self.choose_what_to_do, bgcolor='#E1F3F1',
+                                         color='black')
+        self.button3 = ft.ElevatedButton(text="continue", on_click=self.choose_what_to_do2, bgcolor='#E1F3F1',
+                                         color='black')
+
+        self.button_delete_exec = ft.ElevatedButton(text="button delete exec", on_click=self.delete_exercise,
+                                                    bgcolor='#E1F3F1', color='black')
+        self.button_edit_exec = ft.ElevatedButton(text="button edit exec", on_click=self.edit_exercise,
+                                                  bgcolor='#E1F3F1', color='black')
+
+        self.button_delete_set = ft.ElevatedButton(text="button delete set", on_click=self.delete_set,
+                                                   bgcolor='#E1F3F1', color='black')
+        self.button_format_edit_set = ft.ElevatedButton(text="edit set", on_click=self.edit_set_format,
+                                                        bgcolor='#E1F3F1', color='black')
+
+
+        self.repetitionsS1 = ft.TextField(label="repetitions", autofocus=True, border_color='#8532B8')
+        self.timeS1 = ft.TextField(label="time (minutes)", autofocus=True, border_color='#8532B8')
+        self.weightS1 = ft.TextField(label="weight (Kg)", autofocus=True, border_color='#8532B8')
+        self.distance_KMS1 = ft.TextField(label="distance (KM)", autofocus=True, border_color='#8532B8')
+
+        self.button_edit_set = ft.ElevatedButton(text="edit", on_click=self.edit_set,
+                                                 bgcolor='#E1F3F1', color='black')
+
+        self.edit_panel = ft.Column([
+            ft.Container(
+                margin=10,
+                padding=10,
+                alignment=ft.alignment.center,
+                content=ft.Row(
+                    controls=[
+                        ft.Column(
+                            [
+                                ft.Text("CHOOSE THE WORKOUT YOU WANT TO EDIT-", size=55, color='#8532B8',
+                                        weight=ft.FontWeight.W_500,
+                                        selectable=True,
+                                        font_family="Century Gothic"),
+                                ft.Row(
+                                    [
+                                        ft.Text("THE DATE IS- " + self.str_date, size=25, color='#0A54B6',
+                                                weight=ft.FontWeight.W_500,
+                                                selectable=True, font_family="Century Gothic"),
+                                    ]
+                                ),
+                                self.lst_name_workout,
+                                self.button1
+                            ]
+                        )
+                    ]
+                )
+            )
+        ])
+
+    def return_workout_names(self):
+        lst = self.date_workout()
+
+        lst_name_workout_dropdown = []
+        for i in lst:
+            lst_name_workout_dropdown.append(ft.dropdown.Option(i[2]))
+
+        return lst_name_workout_dropdown
+
+    def date_workout(self):
+        lst = []
+
+        for index in range(len(self.workout_lst)):
+            date1 = datetime.strptime(self.workout_lst[index][3], '%Y-%m-%dT%H:%M:%S')
+            if self.date == date1:
+                lst.append(self.workout_lst[index])
+
+        return lst
+
+    def show_the_exercises(self, e: ft.ControlEvent):
+        workout_name = self.lst_name_workout.value
+        if not workout_name:
+            self.massage.value = "please choose the name of the workout"
+            self.page.update()
+
+        else:
+            self.lst_name_exercises = ft.Dropdown(
+                width=100,
+                options=self.return_exercises_names(),
+            )
+            self.page.add(self.lst_name_exercises)
+            self.page.add(self.button2)
+            self.page.update()
+
+    def return_exercises_names(self):
+        lst = self.date_workout()
+        workout = lst[0]
+        for i in lst:
+            if i[2] == self.lst_name_workout.value:
+                workout = i
+
+        self.exercises_lst = workout[4]
+
+        lst_name_exercise_dropdown = []
+        for j1 in self.exercises_lst:
+            j = json.loads(j1)
+            lst_name_exercise_dropdown.append(ft.dropdown.Option(j["name"]))
+
+        return lst_name_exercise_dropdown
+
+    def choose_what_to_do(self, e: ft.ControlEvent):
+        self.page.add(self.button_delete_exec)
+        self.page.add(self.button_edit_exec)
+        self.page.update()
+
+    def delete_exercise(self, e: ft.ControlEvent):
+        response = self.client.deletexercisefromworkout(userid=self.client.username,
+                                                        date=self.date,
+                                                        workout_name=self.lst_name_workout.value,
+                                                        exercise_name=self.lst_name_exercises.value)
+
+        self.page.add(ft.Text("delete succeed"))
+        self.page.update()
+
+    def edit_exercise(self, e: ft.ControlEvent):
+        exercise_name = ft.TextField(value=self.lst_name_exercises.value, label="exercise name", autofocus=True,
+                                     border_color='#8532B8')
+        power = ft.TextField(label="power", autofocus=True, border_color='#8532B8')
+
+        self.set_lst = []
+        self.page.add(exercise_name, power)
+
+        for i1 in self.exercises_lst:
+            i = json.loads(i1)
+            if self.lst_name_exercises.value == i["name"]:
+                self.set_lst = i["sets"]
+
+        n = 1
+        for s in self.set_lst:
+            self.page.add(ft.Text(f"set {n}- "))
+            self.page.add(ft.Text(f"repetitions - {s['repetitions']}"))
+            self.page.add(ft.Text(f"time (MINUTES) - {s['time']}"))
+            self.page.add(ft.Text(f"weight (KG) - {s['weight']}"))
+            self.page.add(ft.Text(f"distance KM - {s['distance_KM']}"))
+            self.page.update()
+            n += 1
+
+        self.lst_name_sets = ft.Dropdown(
+            width=100,
+            options=self.return_sets_names(),
+        )
+
+        self.page.add(self.lst_name_sets)
+        self.page.add(self.button3)
+        self.page.update()
+
+    def return_sets_names(self):
+
+        lst_name_set_dropdown = []
+        for i in range(len(self.set_lst)):
+            lst_name_set_dropdown.append(ft.dropdown.Option(key=str(i), text=f'set {i + 1}'))
+
+        return lst_name_set_dropdown
+
+    def choose_what_to_do2(self, e: ft.ControlEvent):
+        self.page.add(self.button_delete_set)
+        self.page.add(self.button_format_edit_set)
+        self.page.update()
+
+    def delete_set(self, e: ft.ControlEvent):
+        response = self.client.deletesetfromexercise(userid=self.client.username,
+                                                     date=self.date,
+                                                     workout_name=self.lst_name_workout.value,
+                                                     exercise_name=self.lst_name_exercises.value,
+                                                     sets_index=int(self.lst_name_sets.value)
+                                                     )
+
+        self.page.add(ft.Text("delete succeed"))
+        self.page.update()
+
+    def edit_set_format(self, e: ft.ControlEvent):
+        set1 = self.lst_name_sets.value
+        self.repetitionsS1.value = self.set_lst[int(set1)]["repetitions"]
+        self.timeS1.value = self.set_lst[int(set1)]["time"]
+        self.weightS1.value = self.set_lst[int(set1)]["weight"]
+        self.distance_KMS1.value = self.set_lst[int(set1)]["distance_KM"]
+
+        self.page.add(self.repetitionsS1, self.timeS1, self.weightS1, self.distance_KMS1)
+        self.page.add(self.button_edit_set)
+        self.page.add(self.massage2)
+        self.page.update()
+
+    def edit_set(self, e: ft.ControlEvent):
+        repetitionsS1 = self.repetitionsS1.value
+        timeS1 = self.timeS1.value
+        weightS1 = self.weightS1.value
+        distance_KMS1 = self.distance_KMS1.value
+
+        if repetitionsS1 == "":
+            repetitionsS1 = 0
+
+        if timeS1 == "":
+            timeS1 = 0
+
+        if weightS1 == "":
+            weightS1 = 0
+
+        if distance_KMS1 == "":
+            distance_KMS1 = 0
+
+        if not c_e.str_is_int(repetitionsS1):
+            self.massage2.value = "the repetitions should be in full"
+            self.page.update()
+
+        elif not c_e.str_is_int(timeS1):
+            self.massage2.value = "the time should be in minutes"
+            self.page.update()
+
+        else:
+            if (c_e.is_numeric(repetitionsS1) and c_e.is_numeric(timeS1) and c_e.is_numeric(weightS1)
+                    and c_e.is_numeric(distance_KMS1)):
+                sets2 = Set(repetitions=repetitionsS1, time=timeS1, weight=weightS1, distance_KM=distance_KMS1)
+
+                set1 = sets2.dump()
+
+                response = self.client.updatesetinexercise(userid=self.client.username,
+                                                           date=self.date,
+                                                           workout_name=self.lst_name_workout.value,
+                                                           exercise_name=self.lst_name_exercises.value,
+                                                           sets_index=int(self.lst_name_sets.value),
+                                                           updated_set=set1)
+
+                self.massage2.value = response["response"]
+                self.page.update()
+
+            else:
+                self.massage2.value = "please enter only numbers!"
+                self.page.update()
+
+
+    def main(self, page: ft.Page) -> None:
+        self.page = page
+        self.page.scroll = ft.ScrollMode.ALWAYS
+
+        row_container = self.edit_panel
+        row_container.main_alignment = ft.MainAxisAlignment.CENTER
+
+        row_container.width = 600
+        self.page.add(row_container)
+
+        self.page.horizontal_alignment = 'CENTER'
+        self.page.vertical_alignment = 'CENTER'
+
+        self.page.bgcolor = ft.colors.GREY_100
+        # self.page.add(ft.Column([self.first_panel]))
+        self.page.update()
+
+
+def main() -> None:
+    ft.app(target=EditWorkout.main)
+
+
+if __name__ == "__main__":
+    main()
+
+
 class AddFullWorkout:
     def __init__(self, client: Client, date):
         self.page = None
@@ -18,40 +297,37 @@ class AddFullWorkout:
         self.date = datetime.strptime(date, "%B %d, %Y")  # from string to datetime
         self.str_date = date
 
-
         self.workout_name = ft.TextField(label="name of workout", autofocus=True, border_color='#8532B8')
 
         self.add_workout_button = ft.ElevatedButton(text="continue", on_click=self.add_workout, bgcolor='#8532B8',
-                                         color='white')
-
+                                                    color='white')
 
         self.massage2 = ft.TextField(read_only=True, border="none", color='#A8468C')
 
-
         self.first_panel = ft.Column([
             ft.Container(
-            margin=10,
-            padding=10,
-            alignment=ft.alignment.center,
-            content=ft.Row(
-                controls=[
-                    ft.Column(
-                        [
-                            ft.Text("ADD NEW WORKOUT-", size=55, color='#8532B8', weight=ft.FontWeight.W_500,
-                                    selectable=True,
-                                    font_family="Century Gothic"),
-                            ft.Row(
-                                [
-                                    ft.Text("THE DATE IS- " + self.str_date, size=25, color='#0A54B6',
-                                            weight=ft.FontWeight.W_500,
-                                            selectable=True, font_family="Century Gothic"),
-                                ]
-                            )
-                        ]
-                    )
-                ]
-            )
-        ),
+                margin=10,
+                padding=10,
+                alignment=ft.alignment.center,
+                content=ft.Row(
+                    controls=[
+                        ft.Column(
+                            [
+                                ft.Text("ADD NEW WORKOUT-", size=55, color='#8532B8', weight=ft.FontWeight.W_500,
+                                        selectable=True,
+                                        font_family="Century Gothic"),
+                                ft.Row(
+                                    [
+                                        ft.Text("THE DATE IS- " + self.str_date, size=25, color='#0A54B6',
+                                                weight=ft.FontWeight.W_500,
+                                                selectable=True, font_family="Century Gothic"),
+                                    ]
+                                )
+                            ]
+                        )
+                    ]
+                )
+            ),
             ft.Container(
                 margin=10,
                 padding=10,
@@ -97,7 +373,7 @@ class AddFullWorkout:
         ])
 
         self.delete_workout = ft.ElevatedButton(text="delete workout", on_click=self.delete_workout,
-                                                 bgcolor='#8532B8', color='white')
+                                                bgcolor='#8532B8', color='white')
 
         self.exercise_name = ft.TextField(label="exercise name", autofocus=True, border_color='#8532B8')
         self.power_text = ft.Text("the exercise is power-")
@@ -115,7 +391,7 @@ class AddFullWorkout:
                                                  bgcolor='#8532B8', color='white')
 
         self.button_add_exercise = ft.ElevatedButton(text="add exercise", on_click=self.show_exercise_format,
-                                                 bgcolor='#8532B8', color='white')
+                                                     bgcolor='#8532B8', color='white')
 
         self.exercise_info = ft.Row([ft.Container(
             margin=10,
@@ -144,16 +420,15 @@ class AddFullWorkout:
             )
         )])
 
-
-
         self.text2 = ft.Text("add a set:")
         self.repetitionsS1 = ft.TextField(label="repetitions", autofocus=True, border_color='#8532B8')
         self.timeS1 = ft.TextField(label="time (minutes)", autofocus=True, border_color='#8532B8')
         self.weightS1 = ft.TextField(label="weight (Kg)", autofocus=True, border_color='#8532B8')
         self.distance_KMS1 = ft.TextField(label="distance (KM)", autofocus=True, border_color='#8532B8')
 
-        self.add_set_button = ft.ElevatedButton(text="add the set to exercise", on_click=self.add_set, bgcolor='#8532B8',
-                                               color='white')
+        self.add_set_button = ft.ElevatedButton(text="add the set to exercise", on_click=self.add_set,
+                                                bgcolor='#8532B8',
+                                                color='white')
 
         self.addsetM = ft.TextField(read_only=True, border="none", color='#A8468C')
 
@@ -251,7 +526,8 @@ class AddFullWorkout:
 
         if workout_name and date:
             if c_e.check_workoutname(self.client, workout_name, date):
-                response = self.client.addworkout(userid=username, workout_name=workout_name, date=date, exerciselist="")
+                response = self.client.addworkout(userid=username, workout_name=workout_name, date=date,
+                                                  exerciselist="")
                 self.massage2.value = response["response"]
                 self.page.update()
                 self.page.clean()
@@ -306,7 +582,8 @@ class AddFullWorkout:
 
                 self.addexerciseM.value = response2["response"]
                 self.page.clean()
-                self.page.add(self.show_workout_details(workout_name=self.workout_name.value, workout_date=self.str_date))
+                self.page.add(
+                    self.show_workout_details(workout_name=self.workout_name.value, workout_date=self.str_date))
                 self.page.add(ft.Row([self.button_add_exercise]))
                 self.page.add(ft.Row([self.exercise_info, self.set_info]))
                 self.addsetM.value = ""
@@ -319,9 +596,6 @@ class AddFullWorkout:
         else:
             self.addexerciseM.value = "please fill all the fields"
             self.page.update()
-
-
-
 
     def add_set(self, e: ft.ControlEvent):
         username = self.client.username
@@ -383,7 +657,6 @@ class AddFullWorkout:
                 self.addsetM.value = "please enter only numbers!"
                 self.page.update()
 
-
     def show_set_format(self, e: ft.ControlEvent):
         self.page.clean()
         self.repetitionsS1.value = ""
@@ -422,7 +695,6 @@ if __name__ == "__main__":
     main()
 
 
-
 class ShowTheWorkout:
     def __init__(self, client: Client, date) -> None:
         self.page = None
@@ -457,9 +729,9 @@ class ShowTheWorkout:
             lst_name_workout_dropdown.append(ft.dropdown.Option(i[2]))
 
         self.lst_name_workout = ft.Dropdown(
-                width=100,
-                options=lst_name_workout_dropdown,
-            )
+            width=100,
+            options=lst_name_workout_dropdown,
+        )
 
         self.delete_fomat = ft.Column([
             ft.Text("choose workout to delete- ", size=35, color='#8532B8', weight=ft.FontWeight.W_500, selectable=True,
@@ -473,7 +745,6 @@ class ShowTheWorkout:
         self.page.clean()
         self.page.add(self.delete_fomat)
         self.page.update()
-
 
     def delete_workout(self, e: ft.ControlEvent):
         workout_name = self.lst_name_workout.value
@@ -633,7 +904,6 @@ class ShowTheWorkout:
         ]))
 
         self.page.update()
-
 
     def main(self, page: ft.Page) -> None:
         self.page = page
@@ -946,6 +1216,9 @@ class CalendarApp:
             self.button_add_w = ft.ElevatedButton(text="add workout", on_click=self.go_to_app,
                                                   bgcolor='#8532B8', color='white')
 
+            self.button_edit_w = ft.ElevatedButton(text="edit workout", on_click=self.go_to_edit,
+                                                   bgcolor='#8532B8', color='white')
+
             self.event = ft.TextField(read_only=True, border="none", color=ft.colors.BLACK)
 
             self.boolworkout = ft.TextField(read_only=True, border="none", color=ft.colors.BLACK)
@@ -973,7 +1246,8 @@ class CalendarApp:
                             ft.Row(
                                 [
                                     self.show_workout_info,
-                                    self.button_add_w
+                                    self.button_add_w,
+                                    self.button_edit_w
                                 ]
                             )
                         ])
@@ -981,7 +1255,6 @@ class CalendarApp:
                 ])]
 
         def go_to_app(self, e: ft.ControlEvent) -> None:
-            # Function to navigate to App3 page
             if self.date.value != " ":
                 self.page.clean()
                 app3_instance = AddFullWorkout(client=self.client, date=self.date.value)
@@ -991,10 +1264,18 @@ class CalendarApp:
                 self.page.update()
 
         def go_to_show_workout_info(self, e: ft.ControlEvent) -> None:
-            # Function to navigate to App3 page
             if self.date.value != " ":
                 # self.page.clean()
                 app3_instance = ShowTheWorkout(client=self.client, date=self.date.value)
+                app3_instance.main(self.page)
+            else:
+                self.event.value = "please select date"
+                self.page.update()
+
+        def go_to_edit(self, e: ft.ControlEvent) -> None:
+            if self.date.value != " ":
+                self.page.clean()
+                app3_instance = EditWorkout(client=self.client, date=self.date.value)
                 app3_instance.main(self.page)
             else:
                 self.event.value = "please select date"
@@ -1006,7 +1287,6 @@ class CalendarApp:
         # page.theme_mode = ft.ThemeMode.DARK
         # page.bgcolor = "1f2128"
         page.bgcolor = ft.colors.GREY_100
-
 
         task_manager = CalendarApp.TaskManager(client=client1)
         grid = CalendarApp.DateGrid(
