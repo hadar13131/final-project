@@ -147,7 +147,6 @@ class ShowImproveGraps:
 
     def change_date1(self, e):
         self.s_date = self.date_picker1.value
-        # self.massageD1.value = str(self.date_picker1.value)
         self.massageD1.value = self.date_picker1.value.strftime("%x")
         self.page.update()
         print(f"Date picker 1 changed, value is {self.date_picker1.value}")

@@ -25,14 +25,21 @@ class EditWorkout:
         self.massage2 = ft.TextField(read_only=True, border="none", color='#A8468C')
 
         self.lst_name_workout = ft.Dropdown(
-            width=100,
             options=self.return_workout_names(),
         )
 
-        self.button1 = ft.ElevatedButton(text="continue", on_click=self.show_the_exercises, bgcolor='#E1F3F1',
+        self.button_show_edit_workout = ft.ElevatedButton(text="change", on_click=self.change_workout_details_format, bgcolor='#E1F3F1',
                                          color='black')
+
+        self.button_edit_workout = ft.ElevatedButton(text="change", on_click=self.change_workout_details, bgcolor='#E1F3F1',
+                                         color='black')
+
+        self.button1 = ft.ElevatedButton(text="show exercises", on_click=self.show_the_exercises, bgcolor='#E1F3F1',
+                                         color='black')
+
         self.button2 = ft.ElevatedButton(text="continue", on_click=self.choose_what_to_do, bgcolor='#E1F3F1',
                                          color='black')
+
         self.button3 = ft.ElevatedButton(text="continue", on_click=self.choose_what_to_do2, bgcolor='#E1F3F1',
                                          color='black')
 
@@ -46,6 +53,28 @@ class EditWorkout:
         self.button_format_edit_set = ft.ElevatedButton(text="edit set", on_click=self.edit_set_format,
                                                         bgcolor='#E1F3F1', color='black')
 
+        self.workout_name = ft.TextField(label="change workout name", autofocus=True, border_color='#8532B8')
+
+        self.date_to_change = ""
+
+
+        self.date_picker1 = ft.DatePicker(
+            on_change=self.change_date1,
+            on_dismiss=self.date_picker_dismissed1,
+        )
+
+        self.button_date_to_change = ft.ElevatedButton(
+            "CHOOSE NEW DATE",
+            color=ft.colors.BLACK,
+            icon=ft.icons.CALENDAR_MONTH,
+            on_click=lambda _: self.date_picker1.pick_date(),
+        )
+
+        self.massageD1 = ft.TextField(value=self.str_date, read_only=True, border="none", color='#A8468C')
+
+        self.chane_workout_details_button = ft.ElevatedButton(text="change", on_click=self.show_the_exercises, bgcolor='#E1F3F1',
+                                        color='black')
+
 
         self.repetitionsS1 = ft.TextField(label="repetitions", autofocus=True, border_color='#8532B8')
         self.timeS1 = ft.TextField(label="time (minutes)", autofocus=True, border_color='#8532B8')
@@ -55,7 +84,7 @@ class EditWorkout:
         self.button_edit_set = ft.ElevatedButton(text="edit", on_click=self.edit_set,
                                                  bgcolor='#E1F3F1', color='black')
 
-        self.edit_panel = ft.Column([
+        self.edit_panel = ft.Row([
             ft.Container(
                 margin=10,
                 padding=10,
@@ -64,25 +93,41 @@ class EditWorkout:
                     controls=[
                         ft.Column(
                             [
-                                ft.Text("CHOOSE THE WORKOUT YOU WANT TO EDIT-", size=55, color='#8532B8',
+                                ft.Text("CHOOSE THE WORKOUT YOU WANT TO EDIT-", size=45, color='#8532B8',
                                         weight=ft.FontWeight.W_500,
                                         selectable=True,
                                         font_family="Century Gothic"),
                                 ft.Row(
                                     [
-                                        ft.Text("THE DATE IS- " + self.str_date, size=25, color='#0A54B6',
+                                        ft.Text("in the date- " + self.str_date, size=25, color='#0A54B6',
                                                 weight=ft.FontWeight.W_500,
                                                 selectable=True, font_family="Century Gothic"),
                                     ]
                                 ),
-                                self.lst_name_workout,
-                                self.button1
+                                ft.Row([self.lst_name_workout, self.massage]),
+                                self.workout_name,
+                                ft.Row([self.button_date_to_change, self.massageD1]),
+                                self.button_edit_workout,
+                                ft.Row([]),
+
+                                ft.Row([self.button1])
                             ]
                         )
                     ]
                 )
             )
         ])
+
+
+    def change_date1(self, e):
+        self.date_to_change = self.date_picker1.value
+        self.massageD1.value = self.date_picker1.value.strftime("%x")
+        self.page.update()
+        print(f"Date picker 1 changed, value is {self.date_picker1.value}")
+
+    def date_picker_dismissed1(self, e):
+        print(f"Date picker dismissed, value is {self.date_picker1.value}")
+
 
     def return_workout_names(self):
         lst = self.date_workout()
@@ -95,13 +140,66 @@ class EditWorkout:
 
     def date_workout(self):
         lst = []
-
+        self.workout_lst = self.client.user_workout_lst
         for index in range(len(self.workout_lst)):
             date1 = datetime.strptime(self.workout_lst[index][3], '%Y-%m-%dT%H:%M:%S')
             if self.date == date1:
                 lst.append(self.workout_lst[index])
 
         return lst
+
+    def change_workout_details_format(self, e: ft.ControlEvent):
+        workout_name = self.lst_name_workout.value
+        if not workout_name:
+            self.massage.value = "please choose the name of the workout"
+            self.page.update()
+
+        else:
+            self.page.add(self.workout_name, self.button_date_to_change)
+            self.page.add(self.massageD1)
+            self.massage.value = ""
+            self.page.add(self.button_edit_workout, self.massage)
+            self.page.add(self.massageD1)
+            self.page.update()
+
+    def change_workout_details(self, e: ft.ControlEvent):
+        workout_name = self.lst_name_workout.value
+        new_workout_name = self.workout_name.value
+
+        new_date = self.date_to_change
+
+        if not new_workout_name:
+            new_workout_name = workout_name
+
+        if not new_date:
+            new_date = self.date
+
+        if not workout_name and not self.massageD1.value:
+            self.massage.value = "please enter the name and the date of this workout"
+            self.page.update()
+
+        elif not workout_name:
+            self.massage.value = "please enter the name of this workout"
+            self.page.update()
+
+        elif not self.massageD1.value:
+            self.massage.value = "please enter the date of this workout"
+            self.page.update()
+
+        else:
+            response = self.client.updateworkout(userid=self.client.username, workout_name=workout_name,
+                                                 date=self.date, new_workout_name=new_workout_name, new_date=new_date)
+
+            self.massage.value = response["response"]
+            self.page.update()
+            self.lst_name_workout = ft.Dropdown(
+                options=self.return_workout_names(),
+            )
+            self.page.clean()
+            self.page.add(self.edit_panel)
+            self.page.update()
+
+
 
     def show_the_exercises(self, e: ft.ControlEvent):
         workout_name = self.lst_name_workout.value
@@ -247,7 +345,7 @@ class EditWorkout:
                     and c_e.is_numeric(distance_KMS1)):
                 sets2 = Set(repetitions=repetitionsS1, time=timeS1, weight=weightS1, distance_KM=distance_KMS1)
 
-                set1 = sets2.dump()
+                set1 = json.dumps(sets2.dump())
 
                 response = self.client.updatesetinexercise(userid=self.client.username,
                                                            date=self.date,
@@ -268,7 +366,9 @@ class EditWorkout:
         self.page = page
         self.page.scroll = ft.ScrollMode.ALWAYS
 
-        row_container = self.edit_panel
+        self.page.overlay.append(self.date_picker1)
+
+        row_container = ft.Row([self.edit_panel])
         row_container.main_alignment = ft.MainAxisAlignment.CENTER
 
         row_container.width = 600
@@ -278,7 +378,6 @@ class EditWorkout:
         self.page.vertical_alignment = 'CENTER'
 
         self.page.bgcolor = ft.colors.GREY_100
-        # self.page.add(ft.Column([self.first_panel]))
         self.page.update()
 
 

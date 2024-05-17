@@ -316,6 +316,43 @@ def deleteworkout(userid: str, workout_name: str, date: datetime):
     return {"response": "workout data not found"}
 
 
+@app.get("/updateworkout")
+def updateworkout(userid: str, workout_name: str, date: datetime, new_workout_name: str, new_date: datetime):
+    session = Session()
+
+    find = session.query(workout_table).filter(workout_table.c.userid == userid).all()
+
+    for f in find:
+        if date == f[3] and workout_name == f[2]:
+            workoutid1 = f[0]
+            if new_workout_name != "" and new_date != "":
+                stmt = update(workout_table).where(workout_table.c.workoutid == workoutid1).values(
+                    workout_name=new_workout_name, date=new_date
+                )
+                session.execute(stmt)
+                session.commit()
+                return {"response": "update success"}
+
+
+            elif new_workout_name == "" and new_date != "":
+                stmt = update(workout_table).where(workout_table.c.workoutid == workoutid1).values(date=new_date)
+                session.execute(stmt)
+                session.commit()
+                return {"response": "update success"}
+
+
+            elif new_workout_name != "" and new_date == "":
+                stmt = update(workout_table).where(workout_table.c.workoutid == workoutid1).values(
+                    workout_name=new_workout_name)
+
+                session.execute(stmt)
+                session.commit()
+
+                return {"response": "update success"}
+
+    return {"response": "nothing changed"}
+
+
 # add exercise to exist workout
 # **to change that it will be by workout id and current userid
 @app.get("/addexercisetoworkout")
@@ -510,7 +547,7 @@ def deletesetfromexercise(userid: str, date: datetime, workout_name: str, exerci
 
 @app.get("/updatesetinexercise")
 def updatesetinexercise(userid: str, date: datetime, workout_name: str, exercise_name: str, sets_index: int,
-                        updated_set: dict):
+                        updated_set):
     session = Session()
 
     find = session.query(workout_table).filter(workout_table.c.userid == userid, workout_table.c.date == date).all()
@@ -531,7 +568,7 @@ def updatesetinexercise(userid: str, date: datetime, workout_name: str, exercise
             exercise = e #save the exercise
             break
 
-    exercise["sets"][sets_index] = updated_set
+    exercise["sets"][sets_index] = json.loads(updated_set)
 
     n = 0
     for i in exec_lst:# go over the exercises
